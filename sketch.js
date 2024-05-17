@@ -1,188 +1,141 @@
-let canv = document.getElementById('myCanvas').getContext("2d");
-let isLeft = false;
-let isUp = false;
-let isRight = false;
-let isDown = false;
+let canv = document.getElementById("myCanvas").getContext("2d");
 
-// Classes
+// Verticies in Cartesian Coordinates
+// x,y,z
+s = 200; // Half of one side
+pi = Math.PI;
+let vert = new Array(8);
+vert[0] = [s, s,s]
+vert[1] = [s, s,-s]
+vert[2] = [s, -s,s]
+vert[3] = [s, -s,-s]
+vert[4] = [-s, s,s]
+vert[5] = [-s, s,-s]
+vert[6] = [-s, -s,s]
+vert[7] = [-s, -s,-s]
 
-class Player {
-  constructor() {
-    this.px = 280;
-    this.py = 290;
-    this.width = 40;
-    this.height = 60;
-    this.vy = 0;
-    this.ay = .5;
-  }
-  
-  move() {
-    this.vy += this.ay;
-    this.py += this.vy;
-    if(this.py>=290) {
-      this.py = 290;
-      this.vy = 0;
-    }
-  }
-}
-let you = new Player;
-
-class Cloud {
-  constructor(x,y,w,h,v) {
-    this.x = x;
-    this.y = y;
-    this.w = w;
-    this.h = h;
-    this.v = v;
-  }
-  moveRight() {
-    this.x -= this.v;
-  }
-  moveLeft() {
-    this.x += this.v;
-  }
-}
-
-class Spike {
-  constructor(x) {
-    this.y = 330;
-    this.x = x;
-    this.w = 40;
-    this.h = 20;
-    this.v = 5;
-  }
-  moveRight() {
-    this.x -= this.v;
-  }
-  moveLeft() {
-    this.x += this.v;
-  }
-}
-
-class Goal {
-  constructor(x) {
-    this.x = x;
-    this.y = 310;
-    this.w = 40;
-    this.h = 40;
-    this.v = 5;
-  }
-  moveRight() {
-    this.x -= this.v;
-  }
-  moveLeft() {
-    this.x += this.v;
-  }
-}
-
-// Document Listeners
-
-document.addEventListener('keydown', function(event) {
-  if(event.keyCode == 37) {
-    isLeft = true;
-  } else if(event.keyCode == 38) {
-    isUp = true;
-  } else if(event.keyCode == 39) {
-    isRight = true;
-  } else if(event.keyCode == 40) {
-    isDown = true;
-  }
-}, true);
-
-document.addEventListener('keyup', function(event) {
-  if(event.keyCode == 37) {
-    isLeft = false;
-  } else if(event.keyCode == 38) {
-    isUp = false;
-  } else if(event.keyCode == 39) {
-    isRight = false;
-  } else if(event.keyCode == 40) {
-    isDown = false;
-  }
-}, true);
-
-// Functions
 
 function draw() {
-  // Background
-  canv.fillStyle = "rgb(0,191,255)";
-  canv.fillRect(0,0,600,400);
-  // Floor
-  canv.fillStyle = "black";
-  canv.fillRect(0,350,600,50);
-  // Clouds
-  canv.fillStyle = "white";
-  for(let i = 0; i < clouds.length; i++) {
-    canv.fillRect(clouds[i].x, clouds[i].y, clouds[i].w, clouds[i].h);
+  canv.fillStyle = "rgb(99,99,99)";
+  canv.fillRect(0,0,400,400);
+  canv.fillStyle = "rgb(0,0,0)";
+  let spot = new Array(8);
+  for(let i = 0; i<spot.length;i++) {
+    spot[i] = vert[i].slice();
+    spot[i][2] +=1000;
+    spot[i][0] = spot[i][0]/spot[i][2]*300;
+    spot[i][1] = spot[i][1]/spot[i][2]*300;
   }
-  // Spikes
-  canv.fillStyle = "rgb(200,0,100)";
-  for(let i = 0; i < spikes.length; i++) {
-    canv.fillRect(spikes[i].x, spikes[i].y, spikes[i].w, spikes[i].h);
+  for(let i = 0; i<spot.length;i++) {
+    canv.beginPath();
+    canv.arc(spot[i][0]+200,spot[i][1]+200, 5, 0, 2*Math.PI, true);
+    canv.stroke();
   }
-  // Goal
-  canv.fillStyle = "rgb(0,173,0)";
-  canv.fillRect(goal.x, goal.y, goal.w, goal.h);
-  // Player
-  canv.fillStyle = "red";
-  canv.fillRect(you.px, you.py, you.width, you.height);
+  canv.beginPath();
+  canv.moveTo(spot[0][0]+200,spot[0][1]+200);
+  canv.lineTo(spot[1][0]+200,spot[1][1]+200);
+  canv.lineTo(spot[3][0]+200,spot[3][1]+200);
+  canv.lineTo(spot[2][0]+200,spot[2][1]+200);
+  canv.lineTo(spot[0][0]+200,spot[0][1]+200);
+  canv.lineTo(spot[4][0]+200,spot[4][1]+200);
+  canv.lineTo(spot[5][0]+200,spot[5][1]+200);
+  canv.lineTo(spot[7][0]+200,spot[7][1]+200);
+  canv.lineTo(spot[6][0]+200,spot[6][1]+200);
+  canv.lineTo(spot[4][0]+200,spot[4][1]+200);
+  canv.stroke();
+  canv.moveTo(spot[1][0]+200,spot[1][1]+200);
+  canv.lineTo(spot[5][0]+200,spot[5][1]+200);
+  canv.stroke();
+  canv.moveTo(spot[2][0]+200,spot[2][1]+200);
+  canv.lineTo(spot[6][0]+200,spot[6][1]+200);
+  canv.stroke();
+  canv.moveTo(spot[3][0]+200,spot[3][1]+200);
+  canv.lineTo(spot[7][0]+200,spot[7][1]+200);
+  canv.stroke();
 }
 
-// Level Creation
-
-let clouds = new Array(100);
-for(let i = 0; i < clouds.length; i++) {
-  clouds[i] = new Cloud(Math.random()*10000, Math.random()*200, 100+Math.random()*150, 50+Math.random()*50, 1+Math.random()*2);
+function rotatePhi() { //Clockwise
+  for(let i = 0; i<vert.length;i++) {
+    radius = Math.sqrt(vert[i][0]**2+vert[i][1]**2)
+    angle = Math.acos(vert[i][0]/radius);
+    if(vert[i][1]<0) {
+      angle = Math.PI*2-angle;
+    }
+    angle += .1;
+    vert[i][0] = radius*Math.cos(angle);
+    vert[i][1] = radius*Math.sin(angle);
+    draw();
+  }
 }
 
-let spikes = new Array(20);
-for(let i = 0; i < spikes.length; i++) {
-  spikes[i] = new Spike(600+i*300+Math.random()*100);
+function rotatePhi2() { //CounterClockwise
+  for(let i = 0; i<vert.length;i++) {
+    radius = Math.sqrt(vert[i][0]**2+vert[i][1]**2)
+    angle = Math.acos(vert[i][0]/radius);
+    if(vert[i][1]<0) {
+      angle = Math.PI*2-angle;
+    }
+    angle -= .1;
+    vert[i][0] = radius*Math.cos(angle);
+    vert[i][1] = radius*Math.sin(angle);
+    draw();
+  }
 }
 
-let goal = new Goal(7000);
+function rotateTheta() { //Up
+  for(let i = 0; i<vert.length;i++) {
+    radius = Math.sqrt(vert[i][1]**2+vert[i][2]**2)
+    angle = Math.acos(vert[i][1]/radius);
+    if(vert[i][2]<0) {
+      angle = Math.PI*2-angle;
+    }
+    angle -= .1;
+    vert[i][1] = radius*Math.cos(angle);
+    vert[i][2] = radius*Math.sin(angle);
+    draw();
+  }
+}
 
-// Timer
+function rotateTheta2() { //Down
+  for(let i = 0; i<vert.length;i++) {
+    radius = Math.sqrt(vert[i][1]**2+vert[i][2]**2)
+    angle = Math.acos(vert[i][1]/radius);
+    if(vert[i][2]<0) {
+      angle = Math.PI*2-angle;
+    }
+    angle += .1;
+    vert[i][1] = radius*Math.cos(angle);
+    vert[i][2] = radius*Math.sin(angle);
+    draw();
+  }
+}
 
-let timer = setInterval(function() {
-  
-  for(let i = 0; i < spikes.length; i++) {
-    if(spikes[i].x < 320 && spikes[i].x > 240) {
-      if(you.py > 270) {
-        alert('Ouch!');
-        location.reload();
-      }
+function rotateRight() { //Right
+  for(let i = 0; i<vert.length;i++) {
+    radius = Math.sqrt(vert[i][0]**2+vert[i][2]**2)
+    angle = Math.acos(vert[i][0]/radius);
+    if(vert[i][2]<0) {
+      angle = Math.PI*2-angle;
     }
+    angle += .1;
+    vert[i][0] = radius*Math.cos(angle);
+    vert[i][2] = radius*Math.sin(angle);
+    draw();
   }
-  if(goal.x < 320 && goal.x > 240) {
-    if(you.py > 250) {
-      alert('You made it to the Goal!');
-      location.reload();
+}
+
+function rotateLeft() { //Left
+  for(let i = 0; i<vert.length;i++) {
+    radius = Math.sqrt(vert[i][0]**2+vert[i][2]**2)
+    angle = Math.acos(vert[i][0]/radius);
+    if(vert[i][2]<0) {
+      angle = Math.PI*2-angle;
     }
+    angle -= .1;
+    vert[i][0] = radius*Math.cos(angle);
+    vert[i][2] = radius*Math.sin(angle);
+    draw();
   }
-  if(isUp && you.py==290) {
-    you.vy = -15;
-  }
-  you.move();
-  if(isRight) {
-    for(let i = 0; i < clouds.length; i++) {
-      clouds[i].moveRight();
-    }
-    for(let i = 0; i < spikes.length; i++) {
-      spikes[i].moveRight();
-    }
-    goal.moveRight();
-  }
-  if(isLeft) {
-    for(let i = 0; i < clouds.length; i++) {
-      clouds[i].moveLeft();
-    }
-    for(let i = 0; i < spikes.length; i++) {
-      spikes[i].moveLeft();
-    }
-    goal.moveLeft();
-  }
-  draw();
-  
-}, 10)
+}
+
 draw();
