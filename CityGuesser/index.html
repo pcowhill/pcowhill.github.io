@@ -22,8 +22,9 @@
       named, what proportion of U.S. cities have been revealed, and some other
       fun goals to aim for.  When you loaded the page, the map should have
       automatically been set to an appropriate size.  However, if you would
-      prefer to change the size of the map, use the buttons above the map.  This
-      quiz includes the 48 contiguous states and D.C. totally to 49 "states."
+      prefer to change the size of the map, use the buttons above the map to do
+      so.  This quiz includes the 48 contiguous states and D.C. totally to 49
+      "states."
     </p>
     <p>
       Are you able to name 1000 citites?  Cover each state at least once?  Or do
@@ -33,11 +34,9 @@
     </p>
 
     <!-- Establish canvas resize buttons -->
-    <button id="fitToWindow">Fit to Window</button><br>
-    <button id="decreaseWidth">Decrease Width</button>
-    <button id="increaseWidth">Increase Width</button><br>
-    <button id="decreaseHeight">Decrease Height</button>
-    <button id="increaseHeight">Increase Height</button><br>
+    <button id="fitToWindow">Fit to Window</button>
+    <button id="decreaseWidth">Decrease Size</button>
+    <button id="increaseWidth">Increase Size</button><br>
 
     <!-- Establish canvas for Javascript -->
     <canvas id="myCanvas" width="1" height="1"></canvas><br>
@@ -46,7 +45,8 @@
     <div id="myReport">Report</div>
 
     <!-- Establish Text entry box for Javascript -->
-    <input type="text" id="myEntry" enterkeyhint="enter"><br><br>
+    <input type="text" id="myEntry" enterkeyhint="enter">
+    <button id="submitButton">Go!</button><br><br>
 
     <!-- Establish Score Board -->
     <b><u>Score Board</u></b>

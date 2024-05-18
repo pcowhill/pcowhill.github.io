@@ -61,10 +61,11 @@ export class Mapper {
     this.revealDistance = revealDistance;
 
     // Settings
-    this.minXscale = 0.05;
-    this.minYscale = 0.05;
-    this.maxXscale = 0.95;
-    this.maxYscale = 0.95;
+    this.buffer = 0.05;
+    this.minXscale = this.buffer;
+    this.minYscale = this.buffer;
+    this.maxXscale = 1.0 - this.buffer;
+    this.maxYscale = 1.0 - this.buffer;
     this.latLonRatio = latLonRatio;
 
     // Common Calculations
@@ -103,6 +104,10 @@ export class Mapper {
 
   getCityPixRadius() {
     return 0.0005 * this.xWidth;
+  }
+
+  getOptimalHeight() {
+    return (this.canvasWidth / (this.xWidth / (1.0 - 2 * this.buffer))) * (this.yWidth / (1.0 - 2 * this.buffer));
   }
 }
 

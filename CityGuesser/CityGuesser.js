@@ -17,12 +17,13 @@ let increaseWidthButton = document.getElementById("increaseWidth");
 let decreaseWidthButton = document.getElementById("decreaseWidth");
 let increaseHeightButton = document.getElementById("increaseHeight");
 let decreaseHeightButton = document.getElementById("decreaseHeight");
+let submitButton = document.getElementById("submitButton");
 let myScoreBoard = document.getElementById("myScoreBoard");
 let myFeedback = document.getElementById("myFeedback");
 let myContext = myCanvas.getContext("2d");
 
 myCanvas.width = window.innerWidth - 100;
-myCanvas.height = window.innerHeight - 250;
+myCanvas.height = 1;
 
 myReport.innerText = "To begin, type in a city name into the box below."
 myScoreBoard.innerText = "\n";
@@ -35,6 +36,9 @@ const minmax_latlon = calc_minmax_latlon(city_lats, city_lons, state_borders);
 let revealDistance = 1.5;
 let latLonRatio = 1.2;
 let map = new Mapper(minmax_latlon, myCanvas.width, myCanvas.height, revealDistance, latLonRatio);
+myCanvas.height = map.getOptimalHeight();
+map = new Mapper(minmax_latlon, myCanvas.width, myCanvas.height, revealDistance, latLonRatio);
+
 
 myContext.fillStyle = "rgb(240,240,240)";
 myContext.fillRect(0, 0, myCanvas.width, myCanvas.height);
@@ -108,73 +112,83 @@ function updateScoreBoard() {
 }
 updateScoreBoard();
 
-myEntry.addEventListener("keydown", function (key) {
-  if (key.code == "Enter") {
-    // Checking City Existance Logic
-    inputValue = myEntry.value;
-    inputValueLower = inputValue.toLowerCase();
-    myEntry.value = "";
-    if (citiesNamedLowercase.includes(inputValueLower)) {
-      myReport.innerText = "You have already named " + inputValue + "!";
-    }
-    else if (city_names_lowercase.includes(inputValueLower)) {
-      cititesAddedCount = 0;
-      for (let i = 0; i < city_names.length; i++) {
-        if (city_names_lowercase[i] === inputValueLower) {
-          cititesAddedCount++;
-          thisCityName = city_names[i];
-          citiesNamedIndexes.push(i);
-          if (!statesNamed.includes(city_states[i])) {
-            statesNamed.push(city_states[i]);
-            myFeedback.innerText = city_states[i] + " has been partially named!\n" + myFeedback.innerText;
-          }
-          for (let j = 0; j < city_names.length; j++) {
-            if (citiesRevealedIndexes.includes(j)) continue;
-            latsDiff = (city_lats[i] - city_lats[j]) / latLonRatio;
-            lonsDiff = city_lons[i] - city_lons[j];
-            latSq = latsDiff * latsDiff;
-            lonSq = lonsDiff * lonsDiff;
-            if (latSq + lonSq < revealDistanceSq) {
-              citiesRevealedIndexes.push(j);
-              working_state_counts[city_states[j]]++;
-              if (working_state_counts[city_states[j]] == complete_state_counts[city_states[j]]) {
-                statesFullyRevealed.push(city_states[j])
-                myFeedback.innerText = city_states[j] + " has been fully revealed!!!\n" + myFeedback.innerText;
-              }
-              if (!statesRevealed.includes(city_states[j])) {
-                statesRevealed.push(city_states[j])
-                myFeedback.innerText = city_states[j] + " has been partially revealed!\n" + myFeedback.innerText;
-              }
+function submitGuess() {
+  // Checking City Existance Logic
+  inputValue = myEntry.value;
+  inputValueLower = inputValue.toLowerCase();
+  myEntry.value = "";
+  if (citiesNamedLowercase.includes(inputValueLower)) {
+    myReport.innerText = "You have already named " + inputValue + "!";
+  }
+  else if (city_names_lowercase.includes(inputValueLower)) {
+    cititesAddedCount = 0;
+    for (let i = 0; i < city_names.length; i++) {
+      if (city_names_lowercase[i] === inputValueLower) {
+        cititesAddedCount++;
+        thisCityName = city_names[i];
+        citiesNamedIndexes.push(i);
+        if (!statesNamed.includes(city_states[i])) {
+          statesNamed.push(city_states[i]);
+          myFeedback.innerText = city_states[i] + " has been partially named!\n" + myFeedback.innerText;
+        }
+        for (let j = 0; j < city_names.length; j++) {
+          if (citiesRevealedIndexes.includes(j)) continue;
+          latsDiff = (city_lats[i] - city_lats[j]) / latLonRatio;
+          lonsDiff = city_lons[i] - city_lons[j];
+          latSq = latsDiff * latsDiff;
+          lonSq = lonsDiff * lonsDiff;
+          if (latSq + lonSq < revealDistanceSq) {
+            citiesRevealedIndexes.push(j);
+            working_state_counts[city_states[j]]++;
+            if (working_state_counts[city_states[j]] == complete_state_counts[city_states[j]]) {
+              statesFullyRevealed.push(city_states[j])
+              myFeedback.innerText = city_states[j] + " has been fully revealed!!!\n" + myFeedback.innerText;
+            }
+            if (!statesRevealed.includes(city_states[j])) {
+              statesRevealed.push(city_states[j])
+              myFeedback.innerText = city_states[j] + " has been partially revealed!\n" + myFeedback.innerText;
             }
           }
         }
       }
-      citiesNamed.push(thisCityName);
-      citiesNamedLowercase.push(thisCityName.toLowerCase());
-      if (cititesAddedCount > 1) {
-        myReport.innerText = "There are " + cititesAddedCount + " citites named " + thisCityName + "!";
-      }
-      else {
-        myReport.innerText = "There is " + cititesAddedCount + " city named " + thisCityName + "!";
-      }
+    }
+    citiesNamed.push(thisCityName);
+    citiesNamedLowercase.push(thisCityName.toLowerCase());
+    if (cititesAddedCount > 1) {
+      myReport.innerText = "There are " + cititesAddedCount + " citites named " + thisCityName + "!";
     }
     else {
-      myReport.innerText = inputValue + " is not the name of a city :(";
+      myReport.innerText = "There is " + cititesAddedCount + " city named " + thisCityName + "!";
     }
+  }
+  else {
+    myReport.innerText = inputValue + " is not the name of a city :(";
+  }
 
-    // Track Reports within Feedback
-    myFeedback.innerText = myReport.innerText + "\n" + myFeedback.innerText;
+  // Track Reports within Feedback
+  myFeedback.innerText = myReport.innerText + "\n" + myFeedback.innerText;
 
-    // Update Score Board
-    updateScoreBoard();
+  // Update Score Board
+  updateScoreBoard();
 
-    // Updating Canvas
-    draw();
+  // Updating Canvas
+  draw();
+}
+
+submitButton.addEventListener("mousedown", function () {
+  submitGuess();
+})
+
+myEntry.addEventListener("keydown", function (key) {
+  if (key.code == "Enter") {
+    submitGuess();
   }
 });
 
 increaseWidthButton.addEventListener("mousedown", function () {
   myCanvas.width += 100;
+  map = new Mapper(minmax_latlon, myCanvas.width, myCanvas.height, revealDistance, latLonRatio);
+  myCanvas.height = map.getOptimalHeight();
   map = new Mapper(minmax_latlon, myCanvas.width, myCanvas.height, revealDistance, latLonRatio);
   draw();
 });
@@ -183,25 +197,16 @@ decreaseWidthButton.addEventListener("mousedown", function () {
   if (myCanvas.width >= 200) myCanvas.width -= 100;
   else myCanvas.width = 100;
   map = new Mapper(minmax_latlon, myCanvas.width, myCanvas.height, revealDistance, latLonRatio);
-  draw();
-});
-
-increaseHeightButton.addEventListener("mousedown", function () {
-  myCanvas.height += 100;
-  map = new Mapper(minmax_latlon, myCanvas.width, myCanvas.height, revealDistance, latLonRatio);
-  draw();
-});
-
-decreaseHeightButton.addEventListener("mousedown", function () {
-  if (myCanvas.height >= 200) myCanvas.height -= 100;
-  else myCanvas.height = 100;
+  myCanvas.height = map.getOptimalHeight();
   map = new Mapper(minmax_latlon, myCanvas.width, myCanvas.height, revealDistance, latLonRatio);
   draw();
 });
 
 fitToWindowButton.addEventListener("mousedown", function () {
   myCanvas.width = window.innerWidth - 100;
-  myCanvas.height = window.innerHeight - 250;
+  myCanvas.height = 1;
+  map = new Mapper(minmax_latlon, myCanvas.width, myCanvas.height, revealDistance, latLonRatio);
+  myCanvas.height = map.getOptimalHeight();
   map = new Mapper(minmax_latlon, myCanvas.width, myCanvas.height, revealDistance, latLonRatio);
   draw();
 })
