@@ -1,0 +1,61 @@
+<html>
+  <head>
+    <title>City Guesser Game</title>
+  </head>
+  <body>
+    [<a href="../index.html">Home</a>]
+    <h1>City Guesser Game</h1>
+
+    <!-- Describe how to run the game -->
+    <h2>Instructions</h2>
+    <p>
+      Welcome!
+    </p>
+    <p>
+      Think you know lots of U.S. cities?  Test your knowledge below to find
+      out how much of the U.S. map you are able to fill in by naming cities!
+    </p>
+    <p>
+      For each city you name, all nearby cities within a particular radius
+      are also revealed to you without having to name them directly.  Scores
+      are shown below the map that describe the number of cities that have been
+      named, what proportion of U.S. cities have been revealed, and some other
+      fun goals to aim for.  When you loaded the page, the map should have
+      automatically been set to an appropriate size.  However, if you would
+      prefer to change the size of the map, use the buttons above the map.  This
+      quiz includes the 48 contiguous states and D.C. totally to 49 "states."
+    </p>
+    <p>
+      Are you able to name 1000 citites?  Cover each state at least once?  Or do
+      you think you can reveal all of the citites within the U.S.?  The only
+      way to proove yourself and find out is to scroll down and start naming
+      cities.  Have fun!
+    </p>
+
+    <!-- Establish canvas resize buttons -->
+    <button id="fitToWindow">Fit to Window</button><br>
+    <button id="decreaseWidth">Decrease Width</button>
+    <button id="increaseWidth">Increase Width</button><br>
+    <button id="decreaseHeight">Decrease Height</button>
+    <button id="increaseHeight">Increase Height</button><br>
+
+    <!-- Establish canvas for Javascript -->
+    <canvas id="myCanvas" width="1" height="1"></canvas><br>
+
+    <!-- Establish report for Javascript-->
+    <div id="myReport">Report</div>
+
+    <!-- Establish Text entry box for Javascript -->
+    <input type="text" id="myEntry"><br><br>
+
+    <!-- Establish Score Board -->
+    <b><u>Score Board</u></b>
+    <div id="myScoreBoard">Score Board</div><br>
+
+    <!-- Establish Feedback -->
+    <b><u>Feedback</u></b>
+    <div id="myFeedback">Feedback</div>
+    
+    <script type="module" src="CityGuesser.js"></script>
+  </body>
+</html>
