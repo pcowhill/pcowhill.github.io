@@ -2,65 +2,14 @@
 
 <head>
   <title>Resume</title>
-  <style>
-    a.linkedin:link {
-      color: #1D824C;
-      text-decoration: none;
-    }
-
-    a.linkedin:visited {
-      color: #1D824C;
-      text-decoration: none;
-    }
-
-    a.linkedin:hover {
-      color: #1D824C;
-      text-decoration: underline;
-    }
-
-    a.linkedin:active {
-      color: #ff0505;
-      text-decoration: underline;
-    }
-
-    div.wrapper {
-      text-align: center;
-      width: 1015px;
-      margin: 0 auto;
-    }
-
-    div.mainSection {
-      background: #FFFFFF;
-      border: solid;
-      font-family: Calibri, 'Trebuchet MS', sans-serif;
-      font-size: 24;
-      text-align: left;
-      padding: 40;
-    }
-
-    div.sectionHeader {
-      font-weight: bold;
-    }
-
-    hr {
-      margin-top: 0;
-      margin-bottom: 5;
-      background-color: #000000;
-      height: 0.75;
-    }
-
-    ul {
-      line-height: 1.15em;
-      margin: 0;
-      list-style-position: outside;
-      padding-left: 60;
-    }
-  </style>
+  <link rel="stylesheet" href="indexstyle.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
   [<a href="../index.html">Home</a>]
-  <div style="text-align: center; width: 800px; margin: 0 auto;">
+  <div class="wrapper">
+  <div class="introduction">
     <p>
       Welcome to my <i>interactive Resume.</i> Any portions of this resume
       which light up when the cursor is over them may be clicked to view more
@@ -71,22 +20,21 @@
       <a href="./Cowhill_Resume_GitHub_Pages.pdf">click here</a>.
     </p>
   </div>
-  <div class="wrapper">
     <div class="mainSection">
 
       <!-- Heading -->
-      <div style="text-align: center; font-family:Georgia, 'Times New Roman', Times, serif; font-size:70;">
-        <div style="display: inline; color: #595959">
+      <div class="name">
+        <div class="firstname">
           PATRICK
         </div>
-        <div style="font-weight: bold; display: inline; color: #262626">
+        <div class="lastname">
           COWHILL
         </div>
       </div>
-      <div style="color: #595959; text-align: center;">
+      <div class="phoneAndAddress">
         ------ &#8729; ------
       </div>
-      <div style="font-weight: bold; color: #1D824C;  text-align: center;">
+      <div class="emailAndLinkedin">
         ---@email.com
         &#8729;
         <a class="linkedin" href="https://www.LinkedIn.com/in/PatrickCowhill">
@@ -99,20 +47,20 @@
         EDUCATION
         <hr>
       </div>
-      <span style="display: inline-block; width: 350;">
+      <span class="schoolName">
         <b>Georgia Institue of Technology</b>
       </span>
       <b><i>GPA: 4.00</i></b>
-      <span style="float:right;">Atlanta, GA</span><br>
+      <span class="rightText">Atlanta, GA</span><br>
       Master of Science in Electrical and Computer Engineering
-      <span style="float:right">August 2021 - May 2024</span><br>
-      <span style="display: inline-block; width: 350;">
+      <span class="rightText">August 2021 - May 2024</span><br>
+      <span class="schoolName">
         <b>University of Florida</b>
       </span>
       <b><i>GPA: 3.95</i></b>
-      <span style="float:right;">Gainesville, FL</span><br>
+      <span class="rightText"">Gainesville, FL</span><br>
       Bachelor of Science in Physics
-      <span style="float:right">August 2016 - December 2019</span><br>
+      <span class="rightText">August 2016 - December 2019</span><br>
       Bachelor of Science in Mathematics
 
       <!-- Relevant Experience Section -->
@@ -122,33 +70,33 @@
       </div>
       <!-- L3Harris -->
       <b>L3 Harris Technologies</b>
-      <span style="float:right;">Melbourne, FL</span><br>
+      <span class="rightText">Melbourne, FL</span><br>
       <i>Specialist Software Engineer</i>
-      <span style="float:right;">January 2020 - Present</span><br>
+      <span class="rightText">January 2020 - Present</span><br>
       <ul>
         <li>
-          <span style="position: relative; left: 10">
+          <span class="liEntry">
             Serve as the product owner for 3 actively deployed technologies, a
             technical lead assigning tasking for 9 engineers and scientists, and
             an inventor to 2 awarded patents.
           </span>
         </li>
         <li>
-          <span style="position: relative; left: 10">
+          <span class="liEntry">
             Drive development of EO and SAR software solutions on internal R&D
             and government defense contracts written in C++, Python, and MATLAB
             for Linux and Windows OS.
           </span>
         </li>
         <li>
-          <span style="position: relative; left: 10">
+          <span class="liEntry">
             Lead and instruct interns, perform regular debugging and software
             review, direct configuration management, version control, and high-
             and low-level technical briefings.
           </span>
         </li>
         <li>
-          <span style="position: relative; left: 10">
+          <span class="liEntry">
             Consistently apply knowledge of image and signal processing,
             photogrammetry, Fourier transforms, continuous integration, data
             structures, and geospatial coordinate systems.
@@ -157,26 +105,26 @@
       </ul>
       <!-- University of Florida Physics Department -->
       <b>University of Florida Physics Department</b>
-      <span style="float:right;">Gainesville, FL</span><br>
+      <span class="rightText">Gainesville, FL</span><br>
       <i>Undergraduate Research Assistant</i>
-      <span style="float:right;">January 2018 - December 2019</span><br>
+      <span class="rightText">January 2018 - December 2019</span><br>
       <ul>
         <li>
-          <span style="position: relative; left: 10">
+          <span class="liEntry">
             Utilize Matlab effectively to execute computer simulations and
             modeling of experimental data and design, schedule, and run
             experiments on biological systems.
           </span>
         </li>
         <li>
-          <span style="position: relative; left: 10">
+          <span class="liEntry">
             Carefully operate lab equipment, meticulously devise comprehensive
             laboratory protocols, and efficiently use computers to compose
             reliable programs.
           </span>
         </li>
         <li>
-          <span style="position: relative; left: 10">
+          <span class="liEntry">
             Collaborate with a small group of graduate students, undergraduate
             students, and principal investigator to advance a growing body of
             scientific research in biophysics.
@@ -185,12 +133,12 @@
       </ul>
       <!-- University of Florida Honors Program -->
       <b>University of Florida Honors Program</b>
-      <span style="float:right;">Gainesville, FL</span><br>
+      <span class="rightText">Gainesville, FL</span><br>
       <i>Guest Lecturer</i>
-      <span style="float:right;">January 2018 - May 2018</span><br>
+      <span class="rightText">January 2018 - May 2018</span><br>
       <ul>
         <li>
-          <span style="position: relative; left: 10">
+          <span class="liEntry">
             Independently studied Mathematica and instructed a 4000 level
             Mechanics 2 course of undergraduate students on solving complex
             physics problems by applying programming.
@@ -205,25 +153,25 @@
       </div>
       <ul>
         <li>
-          <span style="position: relative; left: 10">
+          <span class="liEntry">
             Exhibit dual competency in Physics and Mathematics as well as
             problem-solving skills.
           </span>
         </li>
         <li>
-          <span style="position: relative; left: 10">
+          <span class="liEntry">
             Proficient in data analysis, machine learning, statistical
             modeling, and research.
           </span>
         </li>
         <li>
-          <span style="position: relative; left: 10">
+          <span class="liEntry">
             Experienced programmer in C/C++, Matlab, Python, Mathematica, R,
             and JavaScript.
           </span>
         </li>
         <li>
-          <span style="position: relative; left: 10">
+          <span class="liEntry">
             Qualified in using laboratory equipment and constructing circuits
             and electronics.
           </span>
@@ -237,12 +185,12 @@
       </div>
       <!-- University of Florida Warrington College of Business -->
       <b>University of Florida Warrington College of Business</b>
-      <span style="float:right;">Gainesville, FL</span><br>
+      <span class="rightText">Gainesville, FL</span><br>
       <i>University Soloist</i>
-      <span style="float:right;">December 2016 - December 2019</span><br>
+      <span class="rightText">December 2016 - December 2019</span><br>
       <ul>
         <li>
-          <span style="position: relative; left: 10">
+          <span class="liEntry">
             Provide qualified performances of the National Anthem and Alma
             Mater for the Executive and Professional Online MBA Commencement
             Ceremonies.

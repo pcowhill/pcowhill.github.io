@@ -1,0 +1,104 @@
+div.introduction {
+  text-align: center;
+  width: 800px;
+  margin: 0 auto;
+}
+
+div.wrapper {
+  text-align: center;
+  width: 1015px;
+  margin: 0 auto;
+}
+
+div.mainSection {
+  background: #FFFFFF;
+  border: solid;
+  font-family: Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 24;
+  text-align: left;
+  padding: 40;
+}
+
+
+
+div.name {
+  text-align: center;
+  font-family:Georgia, 'Times New Roman', Times, serif;
+  font-size:70;
+}
+
+div.firstname {
+  display: inline;
+  color: #595959
+}
+
+div.lastname {
+  font-weight: bold;
+  display: inline;
+  color: #262626
+}
+
+div.phoneAndAddress {
+  color: #595959;
+  text-align: center;
+}
+
+div.emailAndLinkedin {
+  font-weight: bold;
+  color: #1D824C;
+  text-align: center;
+}
+
+a.linkedin:link {
+  color: #1D824C;
+  text-decoration: none;
+}
+
+a.linkedin:visited {
+  color: #1D824C;
+  text-decoration: none;
+}
+
+a.linkedin:hover {
+  color: #1D824C;
+  text-decoration: underline;
+}
+
+a.linkedin:active {
+  color: #ff0505;
+  text-decoration: underline;
+}
+
+
+
+div.sectionHeader {
+  font-weight: bold;
+}
+
+span.schoolName {
+  display: inline-block;
+  width: 350;
+}
+
+span.rightText {
+  float: right;
+}
+
+hr {
+  margin-top: 0;
+  margin-bottom: 5;
+  background-color: #000000;
+  height: 0.75;
+}
+
+ul {
+  line-height: 1.15em;
+  margin: 0;
+  list-style-position: outside;
+  padding-left: 60;
+}
+
+span.liEntry {
+  position: relative;
+  left: 10
+}
