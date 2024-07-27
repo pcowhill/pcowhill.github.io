@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <title>Instrument of The Day</title>
+    <link rel="stylesheet" href="indexstyle.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+    [<a href="../index.html">Home</a>]
+    
+    <div style="text-align: center">
+
+      <h1>Instrument of The Day</h1>
+
+      <p>Guess the instrument used within this recording!</p>
+
+      <audio controls>
+        <source src="https://ks15.imslp.org/files/imglnks/usimg/4/42/IMSLP310530-PMLP501767-Oddysey-Suite-192.mp3">
+      </audio><br><br>
+
+      <input type="text" list="instrumentsList" name="instrumentGuess" id="inputGuess">
+      <button id="guessButton">GUESS!</button>
+      <datalist id="instrumentsList">
+        <option value="Flute"></option>
+        <option value="Accordion"></option>
+        <option value="Horn"></option>
+        <option value="Flute"></option>
+        <option value="Oboe"></option>
+        <option value="Horn"></option>
+        <option value="Flute"></option>
+        <option value="Oboe"></option>
+        <option value="Horn"></option>
+        <option value="Flute"></option>
+        <option value="Oboe"></option>
+        <option value="Horn"></option>
+        <option value="Flute"></option>
+        <option value="Oboe"></option>
+        <option value="Horn"></option>
+        <option value="Flute"></option>
+        <option value="Oboe"></option>
+        <option value="Horn"></option>
+        <option value="Flute"></option>
+        <option value="Oboe"></option>
+        <option value="Horn"></option>
+        <option value="Flute"></option>
+        <option value="Oboe"></option>
+        <option value="Horn"></option>
+        <option value="Flute"></option>
+        <option value="Oboe"></option>
+        <option value="Horn"></option>
+      </datalist>
+
+      <div class="answer" id="firstGuess">?</div>
+      <div class="answer" id="secondGuess">?</div>
+      <div class="answer" id="thirdGuess">?</div>
+      <div class="answer" id="fourthGuess">?</div>
+      <div class="answer" id="fifthGuess">?</div>
+      <div class="answer" id="sixthGuess">?</div>
+
+      <div id="feedback"></div>
+
+      <script type="module" src="sketch.js"></script>
+    </div>
+  </body>
+</html>
