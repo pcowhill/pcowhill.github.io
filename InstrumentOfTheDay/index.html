@@ -13,41 +13,15 @@
 
       <p>Guess the instrument used within this recording!</p>
 
-      <audio controls>
-        <source src="https://ks15.imslp.org/files/imglnks/usimg/4/42/IMSLP310530-PMLP501767-Oddysey-Suite-192.mp3">
-      </audio><br><br>
+      <div id="audioSelection">
+        <audio controls>
+          <source src="https://ks15.imslp.org/files/imglnks/usimg/4/42/IMSLP310530-PMLP501767-Oddysey-Suite-192.mp3">
+        </audio>
+      </div><br>
 
       <input type="text" list="instrumentsList" name="instrumentGuess" id="inputGuess">
       <button id="guessButton">GUESS!</button>
-      <datalist id="instrumentsList">
-        <option value="Flute"></option>
-        <option value="Accordion"></option>
-        <option value="Horn"></option>
-        <option value="Flute"></option>
-        <option value="Oboe"></option>
-        <option value="Horn"></option>
-        <option value="Flute"></option>
-        <option value="Oboe"></option>
-        <option value="Horn"></option>
-        <option value="Flute"></option>
-        <option value="Oboe"></option>
-        <option value="Horn"></option>
-        <option value="Flute"></option>
-        <option value="Oboe"></option>
-        <option value="Horn"></option>
-        <option value="Flute"></option>
-        <option value="Oboe"></option>
-        <option value="Horn"></option>
-        <option value="Flute"></option>
-        <option value="Oboe"></option>
-        <option value="Horn"></option>
-        <option value="Flute"></option>
-        <option value="Oboe"></option>
-        <option value="Horn"></option>
-        <option value="Flute"></option>
-        <option value="Oboe"></option>
-        <option value="Horn"></option>
-      </datalist>
+      <datalist id="instrumentsList"></datalist>
 
       <div class="answer" id="firstGuess">?</div>
       <div class="answer" id="secondGuess">?</div>
