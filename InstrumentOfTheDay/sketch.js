@@ -17,14 +17,15 @@ let instrumentsList = document.getElementById("instrumentsList");
 let feedback = document.getElementById("feedback");
 
 let correctAnswer = "accordion";
+let correctIndex;
 let guessNumber = 0;
 let hasFinished = false;
 
 
 function setup() {
-  let randomSelection = Math.floor(Math.random() * recordings.length);
-  correctAnswer = recordings[randomSelection][0];
-  let correctRecording = recordings[randomSelection][1];
+  correctIndex = Math.floor(Math.random() * recordings.length);
+  correctAnswer = recordings[correctIndex][0];
+  let correctRecording = recordings[correctIndex][1];
   audioSelection.innerHTML = '<audio controls><source src="' + correctRecording + '"></audio>';
   let validInstrumentsList = [];
   for (let i = 0; i < recordings.length; i++) {
@@ -61,12 +62,19 @@ function processGuess() {
   else {
     feedback.innerText = inputValue.toUpperCase() + " is incorrect... try again...";
     if (guessNumber == 5) {
-      feedback.innerText = "You LOOOOOOOOOSE!!!";
+      feedback.innerText = "You LOOOOOOOOOSE!!!  The answer was: " + correctAnswer.toUpperCase();
       hasFinished = true;
     }
     else {
       guessNumber++;
     }
+  }
+
+  if (hasFinished) {
+    feedback.innerHTML = feedback.innerHTML + "<br><br>";
+    feedback.innerHTML = feedback.innerHTML + recordings[correctIndex][2];
+    feedback.innerHTML = feedback.innerHTML + "<br>";
+    feedback.innerHTML = feedback.innerHTML + '<a href="' + recordings[correctIndex][3] + '">' + recordings[correctIndex][3] + "</a>";
   }
 }
 
