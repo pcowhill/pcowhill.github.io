@@ -112,3 +112,9 @@ function processGuess() {
 guessButton.addEventListener("mousedown", function () {
   processGuess();
 })
+
+inputGuess.addEventListener("keydown", function (key) {
+  if (key.code == "Enter") {
+    processGuess();
+  }
+});
