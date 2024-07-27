@@ -27,7 +27,38 @@ function setup() {
   correctAnswer = recordings[correctIndex][0];
   let correctRecording = recordings[correctIndex][1];
   audioSelection.innerHTML = '<audio controls><source src="' + correctRecording + '"></audio>';
-  let validInstrumentsList = [];
+  // I put some instruments in here if I could not find a recording.  More
+  // options could be enough to throw off our studious guessers!
+  // P.s. it does not matter if there are duplicates in here, don't worry about
+  // accidentally adding something that is already in recordings.js
+  let validInstrumentsList = [
+    "BANJO",
+    "BAGPIPE",
+    "CELESTA",
+    "TIMPANI",
+    "CARILLON",
+    "XYLOPHONE",
+    "HAND PAN",
+    "MARACA",
+    "TAMBOURINE",
+    "TRIANGLE",
+    "WASHBOARD",
+    "BONGOS",
+    "DJEMBE",
+    "DRUM SET",
+    "TIMBALES",
+    "EUPHONIUM",
+    "DIDGERIDOO",
+    "KAZOO",
+    "OCARINA",
+    "AUTOHARP",
+    "PIPA",
+    "CLAVINET",
+    "ERHU",
+    "LYRE",
+    "MANDOLIN",
+    "SNARE"
+  ];
   for (let i = 0; i < recordings.length; i++) {
     if (!validInstrumentsList.includes(recordings[i][0])) {
       validInstrumentsList.push(recordings[i][0].toUpperCase());
