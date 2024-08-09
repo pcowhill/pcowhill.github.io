@@ -26,7 +26,12 @@ function setup() {
   correctIndex = Math.floor(Math.random() * recordings.length);
   correctAnswer = recordings[correctIndex][0];
   let correctRecording = recordings[correctIndex][1];
-  audioSelection.innerHTML = '<audio controls><source src="' + correctRecording + '"></audio>';
+
+  // This function call has been added to attempt to address a behavior with
+  // IMSLP updating their links to the audio files for recordings.  Based on
+  // what I see at the time of writing, this should fix the behavior.
+  find_website(correctRecording);
+
   // I put some instruments in here if I could not find a recording.  More
   // options could be enough to throw off our studious guessers!
   // P.s. it does not matter if there are duplicates in here, don't worry about
@@ -108,6 +113,45 @@ function processGuess() {
     feedback.innerHTML = feedback.innerHTML + '<a href="' + recordings[correctIndex][3] + '">' + recordings[correctIndex][3] + "</a>";
   }
 }
+
+function fetchFile(url) {
+  return fetch(url)
+    .then(response => {
+      if (response.ok) {
+        return url;
+      }
+    })
+}
+
+function find_website(websiteSuffix) {
+  // There seems to be a behavior where IMSLP will chain the website that is
+  // hosting their audio files.  However, based on some brief exploration, it
+  // seems that this is done in a somewhat predictable way.  In particular, the
+  // subdomain appears to cycle through the following options while the rest
+  // of the URL stays the same
+  //   - s9
+  //   - ks15
+  //   - vmirror
+  // In this function, I will attempt to check all three of these potential
+  // subdomains and then return the one that is correct.
+  let options = [
+    "https://s9." + websiteSuffix,
+    "https://ks15." + websiteSuffix,
+    "https://vmirror." + websiteSuffix
+  ];
+  const fetchPromises = options.map(url => fetchFile(url));
+
+  Promise.race(fetchPromises)
+    .then(url => {
+      audioSelection.innerHTML = '<audio controls><source src="' + url + '"></audio>';
+      return;
+    })
+    .catch(error => {
+      console.error('Failed to load audio file.');
+    })
+}
+
+
 
 guessButton.addEventListener("mousedown", function () {
   processGuess();
