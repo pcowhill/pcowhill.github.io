@@ -27,8 +27,6 @@ function setup() {
   correctAnswer = recordings[correctIndex][0];
   let correctRecording = recordings[correctIndex][1];
 
-  console.log(correctIndex)
-  console.log(correctRecording)
   audioSelection.innerHTML = '<audio controls><source src="' + correctRecording + '"></audio>';
   
 
