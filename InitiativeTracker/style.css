@@ -1,0 +1,123 @@
+::selection {
+    background: #dddddd;
+}
+
+button.primary {
+    position: relative;
+    margin: 10 auto;
+    padding: 5;
+    width: 300px;
+    font-family:cursive;
+    font-size: 1.5em;
+    font-weight: bold;
+    overflow: hidden;
+}
+
+div.modal, div.confirm {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rbg(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+    padding-top: 60px;
+}
+div.modal-content, div.confirm-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+button.prompt {
+    width: 100px;
+    margin: 10 10 auto;
+}
+input.modalInput {
+    width: 260px;
+}
+input.modalInput, button.prompt {
+    height: 40px;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+
+button.secondary {
+    display: none;
+    position: relative;
+    margin: 10 auto;
+    padding: 5;
+    width: 300px;
+    font-family:cursive;
+    font-size: 1.5em;
+    font-weight: bold;
+    overflow: hidden;
+}
+
+table {
+    border-collapse: collapse;
+    width: 300px;
+    margin: 10 auto;
+}
+
+td, th {
+    border-bottom: 1px solid #888888;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    width: 150px;
+}
+td:nth-child(odd), th:nth-child(odd) {
+    text-align: right;
+    padding-right: 15px;
+    padding-left: 0px;
+}
+td:nth-child(even), th:nth-child(even) {
+    text-align: left;
+    padding-left: 15px;
+    padding-right: 0px;
+}
+
+div.encounterMenu {
+    margin: 0 auto;
+}
+
+div.currentCreature, div.otherCreatures {
+    width: 300px;
+    margin: 0 auto;
+    padding: 10px;
+    text-align: center;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+}
+
+div.currentCreature {
+    background-color: #ffeb3b;
+    border: 2px solid #fbc02d;
+}
+
+div.currentCreatureName {
+    font-weight: bold;
+    font-size: 3em;
+}
+
+div.buttonHolder {
+    display: flex;
+}
+
+button.rip, button.endTurn, button.delayTurn {
+    align-items: center;
+    position: relative;
+    margin: 10 5 auto;
+    padding: 5;
+    width: 80px;
+    height: 80px;
+    font-family:cursive;
+    font-size: 1.5em;
+    font-weight: bold;
+    overflow: hidden;
+}
