@@ -225,16 +225,25 @@ function startEncounter() {
 
   // Add Events
   document.getElementById("rip").addEventListener("click", function () {
+    if (initiativeList.length == 0) {
+      return;
+    }
     deadList.push(initiativeList[0]);
     initiativeList.splice(0, 1);
     populateInitiativeTrackingElements();
   })
   document.getElementById("endTurn").addEventListener("click", function () {
+    if (initiativeList.length == 0) {
+      return;
+    }
     initiativeList.push(initiativeList[0]);
     initiativeList.splice(0, 1);
     populateInitiativeTrackingElements();
   })
   document.getElementById("delayTurn").addEventListener("click", function () {
+    if (initiativeList.length == 0) {
+      return;
+    }
     [initiativeList[0], initiativeList[1]] = [initiativeList[1], initiativeList[0]];
     populateInitiativeTrackingElements();
   })
