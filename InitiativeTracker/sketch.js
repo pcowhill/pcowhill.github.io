@@ -342,12 +342,10 @@ function deleteCookie(key) {
 }
 
 function saveCookies() {
-  console.log('Cookies Saved!')
   setCookie('initiativeList', JSON.stringify(initiativeList));
   setCookie('deadList', JSON.stringify(deadList));
   setCookie('currentPage', currentPage);
   setCookie('encounterName', encounterName);
-  console.log(document.cookie);
 }
 
 // Events
@@ -367,15 +365,7 @@ document.getElementById("modalSubmit").addEventListener("click", throwInvalidOpe
 document.getElementById("confirmApprove").addEventListener("click", throwInvalidOperation);
 document.getElementById("confirmDeny").addEventListener("click", throwInvalidOperation);
 
-if (0) {
-  deleteCookie('initiativeList');
-  deleteCookie('deadList');
-  deleteCookie('currentPage');
-  deleteCookie('encounterName');
-}
-
 // Load Page From Previous State
-console.log(document.cookie);
 let initiativeList = getCookie('initiativeList')
 let deadList = getCookie('deadList')
 let currentPage = getCookie('currentPage')
