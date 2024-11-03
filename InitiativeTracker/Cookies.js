@@ -3,7 +3,7 @@ import { PageType } from "./Pages.js";
 
 export class CookieHandler {
   constructor() {
-    let currentVersion = "v1.2";
+    let currentVersion = "v1.3";
     if (!(this.getCookie("currentVersion") === currentVersion)) {
       this.clearAll();
       this.setCookie("currentVersion", currentVersion);

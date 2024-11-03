@@ -99,7 +99,8 @@ export class EncounterPage {
       let thisInitiative = sessionData.initiativeList[0].initiative;
       htmlCode.append(`
         <div class="currentCreature">
-          <div class="currentCreatureName">${thisCreature} (${thisInitiative})</div>
+          <div class="currentCreatureName">${thisCreature}</div>
+          <div class="currentCreatureDetails">(Initiative: ${thisInitiative})</div>
           <div class="buttonHolder">
             <button class="rip" id="rip">R.I.P.</button>
             <button class="delayTurn" id="delayTurn">Delay Turn</button>
