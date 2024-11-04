@@ -54,7 +54,7 @@ input.modalInput, button.prompt {
 
 
 button.secondary {
-    display: inline;
+    display: block;
     position: relative;
     margin: 10 auto;
     padding: 5;
@@ -132,7 +132,7 @@ button.rip, button.endTurn, button.delayTurn {
     overflow: hidden;
 }
 
-button.hit {
+button.hit, button.edit, button.remove {
     align-items: center;
     position: relative;
     margin: 10 5 auto;

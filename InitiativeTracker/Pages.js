@@ -26,20 +26,28 @@ export class MainMenuPage {
 export class PreEncounterPage {
   constructor(
     startEncounter,
+    endEncounter,
     getInitiativeSetEvent,
     otherInitiativeSetEvent,
-    encounterName
+    encounterName,
+    editInitiative,
+    removeCreature,
+    removeAllCreatures
   ) {
     this.pageType = PageType.PreEncounter;
     this.characterIds = ["Bloop", "Cyril", "Nahala", "T'avi", "Toross"];
     this.encounterName = encounterName;
+    this.editInitiative = editInitiative;
+    this.removeCreature = removeCreature;
     this.eventListeners = new EventListenerList([]);
     for (let i = 0; i < this.characterIds.length; i++) {
       let id = this.characterIds[i];
       this.eventListeners.append(new EventListener(id, "click", getInitiativeSetEvent(id)));
     }
     this.eventListeners.append(new EventListener("Other", "click", otherInitiativeSetEvent));
+    this.eventListeners.append(new EventListener("removeAllCreatures", "click", removeAllCreatures));
     this.eventListeners.append(new EventListener("startEncounter", "click", startEncounter));
+    this.eventListeners.append(new EventListener("endEncounter", "click", endEncounter));
   }
   getHtml(sessionData) {
     let htmlCode = new HtmlCode("");
@@ -60,23 +68,38 @@ export class PreEncounterPage {
       let thisInitiative = sessionData.initiativeList[i].initiative;
       let thisHitpointsCurrent = sessionData.initiativeList[i].hitpointsCurrent;
       let thisHitpointsMax = sessionData.initiativeList[i].hitpointsMax;
-      if (!(thisHitpointsCurrent == null)) {
-        htmlCode.append(`
-          <div class="otherCreatures">
-            ${thisCreature} | <img class="icon" src="InitiativeIcon.png"> ${thisInitiative} | <img class="icon" src="HitpointsIcon.png"> ${thisHitpointsCurrent}/${thisHitpointsMax}
-          </div>`);
-      }
-      else {
-        htmlCode.append(`
-          <div class="otherCreatures">
-            ${thisCreature} | <img class="icon" src="InitiativeIcon.png"> ${thisInitiative} | <img class="icon" src="HitpointsIcon.png"> --/--
-          </div>`);
-      }
+      htmlCode.append(`
+        <div class="otherCreatures">
+          ${thisCreature} |
+          <img class="icon" src="InitiativeIcon.png"> ${thisInitiative} |
+      `);
+      if (!(thisHitpointsCurrent == null))
+        htmlCode.append(`<img class="icon" src="HitpointsIcon.png"> ${thisHitpointsCurrent}/${thisHitpointsMax}`);
+      else
+        htmlCode.append(`<img class="icon" src="HitpointsIcon.png"> --/--`);
+      htmlCode.append(`
+          <div class="buttonHolder">
+            <button class="remove" id="remove-${i}">Remove</button>
+            <button class="edit" id="edit-${i}">Edit</button>
+          </div>
+        </div>
+      `);
+
+      // Ensure there exist sufficient event handlers regarless of added or removed entries.
+      let editEventListener = new EventListener(`edit-${i}`, "click", () => {this.editInitiative(i)});
+      this.eventListeners.expire(editEventListener);
+      this.eventListeners.append(editEventListener);
+      let removeEventListener = new EventListener(`remove-${i}`, "click", () => {this.removeCreature(i)});
+      this.eventListeners.expire(removeEventListener);
+      this.eventListeners.append(removeEventListener);
     }
 
-    htmlCode.append(`<button class="secondary" id="startEncounter">Start Encounter</button>`)
+    htmlCode.append(`<br>`);
+    htmlCode.append(`<button class="secondary" id="removeAllCreatures">Remove All</button>`);
+    htmlCode.append(`<button class="secondary" id="startEncounter">Start Encounter</button>`);
+    htmlCode.append(`<button class="secondary" id="endEncounter">End Encounter</button>`);
 
-    htmlCode.append(`</div>`)
+    htmlCode.append(`</div>`);
     return htmlCode;
   }
 }
@@ -84,6 +107,7 @@ export class PreEncounterPage {
 export class EncounterPage {
   constructor(
     endEncounter,
+    resetEncounter,
     encounterName,
     rip,
     delayTurn,
@@ -97,6 +121,7 @@ export class EncounterPage {
       new EventListener("rip", "click", rip),
       new EventListener("delayTurn", "click", delayTurn),
       new EventListener("endTurn", "click", endTurn),
+      new EventListener("resetEncounter", "click", resetEncounter),
       new EventListener("endEncounter", "click", endEncounter)
     ]);
     for (let i = 0; i < sessionData.initiativeList.length; i++) {
@@ -131,8 +156,14 @@ export class EncounterPage {
       }
       htmlCode.append(`
           </div>
-          <div class="buttonHolder">
-            <button class="rip" id="rip">R.I.P.</button>
+          <div class="buttonHolder">`);
+      if (!(thisHitpointsCurrent == null)) {
+        htmlCode.append(`<button class="rip" id="hit-${thisCreature}">Hit</button>`);
+      }
+      else {
+        htmlCode.append(`<button class="rip" id="rip">R.I.P.</button>`);
+      }
+      htmlCode.append(`
             <button class="delayTurn" id="delayTurn">Delay Turn</button>
             <button class="endTurn" id="endTurn">End Turn</button>
           </div>
@@ -167,6 +198,7 @@ export class EncounterPage {
     }
 
     // End Encounter Button
+    htmlCode.append(`<button class="secondary" id="resetEncounter">Reset Encounter</button>`)
     htmlCode.append(`<button class="secondary" id="endEncounter">End Encounter</button>`)
 
     htmlCode.append(`</div>`)
