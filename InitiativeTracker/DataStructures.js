@@ -20,7 +20,7 @@ export class SessionData {
     this.deadList = [];
     this.encounterName = "The Encounter";
   }
-  addCreatureInitiative(creatureId, initiative, hitpointsCurrent=null, hitpointsMax) {
+  addCreatureInitiative(creatureId, initiative, hitpointsCurrent=null, hitpointsMax=null) {
     this.initiativeList.push(new DataEntry(creatureId, initiative, hitpointsCurrent, hitpointsMax));
   }
   addDeadCreatureInitiative(creatureId, initiative) {
