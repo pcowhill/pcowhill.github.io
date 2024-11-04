@@ -27,7 +27,9 @@ export class InitiativeTracker {
           this.sessionData.encounterName,
           this.rip,
           this.delayTurn,
-          this.endTurn
+          this.endTurn,
+          this.hitCreature,
+          this.sessionData
         );
         break;
       default:
@@ -50,8 +52,7 @@ export class InitiativeTracker {
   // Main Menu Logic
   // ##################################################
   selectNewEncounter = () => {
-    this.currentModal.activateTextInput(
-      "Encounter Name:", "Tavern Brawl", this.enterPreEncounter)
+    this.currentModal.activateTextInput("Encounter Name:", "Tavern Brawl", this.enterPreEncounter);
   }
 
   // ##################################################
@@ -81,8 +82,11 @@ export class InitiativeTracker {
   otherInitiativeSetEvent = () => {
     let reportCreatureId = (creatureId) => {
       let reportInitiative = (initiative) => {
-        this.sessionData.addCreatureInitiative(creatureId, initiative);
-        this.update();
+        let reportHitpoints = (hitpoints) => {
+          this.sessionData.addCreatureInitiative(creatureId, initiative, hitpoints, hitpoints);
+          this.update();
+        }
+        this.currentModal.activateNumberInput("Enter Hitpoints", 20, reportHitpoints);
       }
       this.currentModal.activateNumberInput("Enter Initiative:", 10, reportInitiative);
     }
@@ -101,7 +105,9 @@ export class InitiativeTracker {
       this.sessionData.encounterName,
       this.rip,
       this.delayTurn,
-      this.endTurn
+      this.endTurn,
+      this.hitCreature,
+      this.sessionData
     );
     this.update();
   }
@@ -122,5 +128,12 @@ export class InitiativeTracker {
   endTurn = () => {
     this.sessionData.endTurnCurrentCreature();
     this.update();
+  }
+  hitCreature = (creatureId) => {
+    let dealDamage = (damageDealt) => {
+      this.sessionData.damageCreature(creatureId, damageDealt);
+      this.update();
+    }
+    this.currentModal.activateNumberInput("Enter Damage Delt:", 5, dealDamage);
   }
 }
