@@ -3,7 +3,7 @@ import { PageType } from "./Pages.js";
 
 export class CookieHandler {
   constructor() {
-    let currentVersion = "v1.2";
+    let currentVersion = "v1.3";
     if (!(this.getCookie("currentVersion") === currentVersion)) {
       this.clearAll();
       this.setCookie("currentVersion", currentVersion);
@@ -63,14 +63,18 @@ export class CookieHandler {
     for (let i = 0; i < sessionData.initiativeList.length; i++) {
       dict.initiativeList.push({
         creatureId: sessionData.initiativeList[i].creatureId,
-        initiative: sessionData.initiativeList[i].initiative
+        initiative: sessionData.initiativeList[i].initiative,
+        hitpointsCurrent: sessionData.initiativeList[i].hitpointsCurrent,
+        hitpointsMax: sessionData.initiativeList[i].hitpointsMax
       })
     }
     dict.deadList = [];
     for (let i = 0; i < sessionData.deadList.length; i++) {
       dict.deadList.push({
         creatureId: sessionData.deadList[i].creatureId,
-        initiative: sessionData.deadList[i].initiative
+        initiative: sessionData.deadList[i].initiative,
+        hitpointsCurrent: sessionData.deadList[i].hitpointsCurrent,
+        hitpointsMax: sessionData.deadList[i].hitpointsMax
       })
     }
     dict.encounterName = sessionData.encounterName;
@@ -85,13 +89,17 @@ export class CookieHandler {
     for (let i = 0; i < dict.initiativeList.length; i++) {
       sessionData.addCreatureInitiative(
         dict.initiativeList[i].creatureId,
-        dict.initiativeList[i].initiative
+        dict.initiativeList[i].initiative,
+        dict.initiativeList[i].hitpointsCurrent,
+        dict.initiativeList[i].hitpointsMax
       )
     }
     for (let i = 0; i < dict.deadList.length; i++) {
       sessionData.addDeadCreatureInitiative(
         dict.deadList[i].creatureId,
-        dict.deadList[i].initiative
+        dict.deadList[i].initiative,
+        dict.deadList[i].hitpointsCurrent,
+        dict.deadList[i].hitpointsMax
       )
     }
     sessionData.encounterName = dict.encounterName;

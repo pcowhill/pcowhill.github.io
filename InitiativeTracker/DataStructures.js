@@ -20,8 +20,8 @@ export class SessionData {
     this.deadList = [];
     this.encounterName = "The Encounter";
   }
-  addCreatureInitiative(creatureId, initiative) {
-    this.initiativeList.push(new DataEntry(creatureId, initiative));
+  addCreatureInitiative(creatureId, initiative, hitpointsCurrent=null, hitpointsMax=null) {
+    this.initiativeList.push(new DataEntry(creatureId, initiative, hitpointsCurrent, hitpointsMax));
   }
   addDeadCreatureInitiative(creatureId, initiative) {
     this.deadList.push(new DataEntry(creatureId, initiative));
@@ -36,6 +36,17 @@ export class SessionData {
   }
   delayTurnCurrentCreature() {
     [this.initiativeList[0], this.initiativeList[1]] = [this.initiativeList[1], this.initiativeList[0]];
+  }
+  damageCreature(creatureId, damageDealt) {
+    for (let i = 0; i < this.initiativeList.length; i++) {
+      if (this.initiativeList[i].creatureId === creatureId) {
+        this.initiativeList[i].hitpointsCurrent -= damageDealt;
+        if (this.initiativeList[i].hitpointsCurrent < 1) {
+          this.deadList.push(this.initiativeList[i]);
+          this.initiativeList.splice(i, 1);
+        }
+      }
+    }
   }
   containsCreature(creatureId) {
     for (let i = 0; i < this.initiativeList.length; i++) {
@@ -102,8 +113,10 @@ export class SessionData {
 }
 
 class DataEntry {
-  constructor(creatureId, initiative) {
+  constructor(creatureId, initiative, hitpointsCurrent=null, hitpointsMax=null) {
     this.creatureId = creatureId;
     this.initiative = initiative;
+    this.hitpointsCurrent = hitpointsCurrent;
+    this.hitpointsMax = hitpointsMax;
   }
 }

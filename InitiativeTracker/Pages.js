@@ -58,7 +58,20 @@ export class PreEncounterPage {
     for (let i = 0; i < sessionData.initiativeList.length; i++) {
       let thisCreature = sessionData.initiativeList[i].creatureId;
       let thisInitiative = sessionData.initiativeList[i].initiative;
-      htmlCode.append(`<div class="otherCreatures">${thisCreature} (${thisInitiative})</div>`)
+      let thisHitpointsCurrent = sessionData.initiativeList[i].hitpointsCurrent;
+      let thisHitpointsMax = sessionData.initiativeList[i].hitpointsMax;
+      if (!(thisHitpointsCurrent == null)) {
+        htmlCode.append(`
+          <div class="otherCreatures">
+            ${thisCreature} | <img class="icon" src="InitiativeIcon.png"> ${thisInitiative} | <img class="icon" src="HitpointsIcon.png"> ${thisHitpointsCurrent}/${thisHitpointsMax}
+          </div>`);
+      }
+      else {
+        htmlCode.append(`
+          <div class="otherCreatures">
+            ${thisCreature} | <img class="icon" src="InitiativeIcon.png"> ${thisInitiative} | <img class="icon" src="HitpointsIcon.png"> --/--
+          </div>`);
+      }
     }
 
     htmlCode.append(`<button class="secondary" id="startEncounter">Start Encounter</button>`)
@@ -74,9 +87,10 @@ export class EncounterPage {
     encounterName,
     rip,
     delayTurn,
-    endTurn
+    endTurn,
+    hitCreature,
+    sessionData
   ) {
-    
     this.pageType = PageType.Encounter;
     this.encounterName = encounterName;
     this.eventListeners = new EventListenerList([
@@ -85,6 +99,10 @@ export class EncounterPage {
       new EventListener("endTurn", "click", endTurn),
       new EventListener("endEncounter", "click", endEncounter)
     ]);
+    for (let i = 0; i < sessionData.initiativeList.length; i++) {
+      const thisCreatureId = sessionData.initiativeList[i].creatureId;
+      this.eventListeners.append(new EventListener(`hit-${thisCreatureId}`, "click", () => {hitCreature(thisCreatureId);}));
+    }
   }
   getHtml(sessionData) {
     let htmlCode = new HtmlCode("");
@@ -97,9 +115,22 @@ export class EncounterPage {
     if (sessionData.initiativeList.length > 0) {
       let thisCreature = sessionData.initiativeList[0].creatureId;
       let thisInitiative = sessionData.initiativeList[0].initiative;
+      let thisHitpointsCurrent = sessionData.initiativeList[0].hitpointsCurrent;
+      let thisHitpointsMax = sessionData.initiativeList[0].hitpointsMax;
       htmlCode.append(`
         <div class="currentCreature">
-          <div class="currentCreatureName">${thisCreature} (${thisInitiative})</div>
+          <div class="currentCreatureName">${thisCreature}</div>
+          <div class="currentCreatureDetails">
+      `);
+      htmlCode.append(`Initiative | <img class="icon" src="InitiativeIcon.png"> ${thisInitiative}`);
+      if (!(thisHitpointsCurrent == null)) {
+        htmlCode.append(`</br>Hitpoints | <img class="icon" src="HitpointsIcon.png"> ${thisHitpointsCurrent}/${thisHitpointsMax}`);
+      }
+      else {
+        htmlCode.append(`</br>Hitpoints | <img class="icon" src="HitpointsIcon.png"> --/--`);
+      }
+      htmlCode.append(`
+          </div>
           <div class="buttonHolder">
             <button class="rip" id="rip">R.I.P.</button>
             <button class="delayTurn" id="delayTurn">Delay Turn</button>
@@ -111,12 +142,28 @@ export class EncounterPage {
     for (let i = 1; i < sessionData.initiativeList.length; i++) {
       let thisCreature = sessionData.initiativeList[i].creatureId;
       let thisInitiative = sessionData.initiativeList[i].initiative;
-      htmlCode.append(`<div class="otherCreatures">${thisCreature} (${thisInitiative})</div>`)
+      let thisHitpointsCurrent = sessionData.initiativeList[i].hitpointsCurrent;
+      let thisHitpointsMax = sessionData.initiativeList[i].hitpointsMax;
+      htmlCode.append(`<div class="otherCreatures">`);
+      if (!(thisHitpointsCurrent == null)) {
+        htmlCode.append(`
+            ${thisCreature} | <img class="icon" src="InitiativeIcon.png"> ${thisInitiative} | <img class="icon" src="HitpointsIcon.png"> ${thisHitpointsCurrent}/${thisHitpointsMax}
+            <div class="buttonHolder">
+              <button class="hit" id="hit-${thisCreature}">Hit</button>
+            </div>
+        `);
+      }
+      else {
+        htmlCode.append(`
+            ${thisCreature} | <img class="icon" src="InitiativeIcon.png"> ${thisInitiative} | <img class="icon" src="HitpointsIcon.png"> --/--
+        `);
+      }
+      htmlCode.append(`</div>`)
     }
     for (let i = 0; i < sessionData.deadList.length; i++) {
       let thisCreature = sessionData.deadList[i].creatureId;
       let thisInitiative = sessionData.deadList[i].initiative;
-      htmlCode.append(`<div class="otherCreatures"><del>${thisCreature} (${thisInitiative})</del></div>`)
+      htmlCode.append(`<div class="otherCreatures"><del>${thisCreature}</del></div>`)
     }
 
     // End Encounter Button
