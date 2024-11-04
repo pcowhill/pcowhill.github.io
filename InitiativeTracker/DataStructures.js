@@ -110,6 +110,23 @@ export class SessionData {
       this.resolveInitiativeListIssues();
     }
   }
+  resetEncounter() {
+    // Revive
+    for (let i = 0; i < this.deadList.length; i++) {
+      this.initiativeList.push(this.deadList[i]);
+    }
+    this.deadList = [];
+
+    // Heal
+    for (let i = 0; i < this.initiativeList.length; i++) {
+      if (!(this.initiativeList[i].hitpointsCurrent == null)) {
+        this.initiativeList[i].hitpointsCurrent = this.initiativeList[i].hitpointsMax;
+      }
+    }
+
+    // Sort
+    this.sortInitiativeList();
+  }
 }
 
 class DataEntry {

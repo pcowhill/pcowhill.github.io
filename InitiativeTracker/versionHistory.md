@@ -1,0 +1,5 @@
+v1.0 - Initial Release - Contains functionality to enter the initiative of PCs and NPCs and have them automatically tracked over the course of a round.
+v1.1 - Added Cookies - Cookies save the state of the round.  If the page is refreshed, if you switch to a different app, or if the page is closed and opened again in the same browser, it should bring you back to where you left off.
+v1.2 - Large Refactor - Changed from single-file spaghetti code with global variables to an OOP format.  This should increase maintainability, decrease bugs, and make it easier to add new features.
+v1.3 - Added HP tracking - Hitpoints are now tracked in addition to initiative.  Monsters will automatically perish once their hitpoints goes below 1.
+v1.4 - Tons of new buttons - Added buttons to edit/remove creature entries when building an encounter, there are more buttons to end/reset an encounter on more pages, large changes now include confirmation messages.
