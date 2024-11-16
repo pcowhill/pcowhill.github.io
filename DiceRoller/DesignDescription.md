@@ -113,3 +113,172 @@ The user interface will be designed in the course of development.  It is not the
   - v0.4 graphical basics: in which intuitive graphics and UI will be designed
   - v1.0 initial release: in which the app will be released
 - **Testing and Validation**: Necessary testing and validation steps will be implemented.
+
+
+
+
+## Modeling Elastic Deflection
+
+### Introductory Notes / Lessons Learned:
+- Note that the type of action that occurs when a die strikes the side of the box is called a "deflection", not a "collision".  This has caused much confusion.  Elastic collisions involve conservation of momentum and energy while deflections (i.e. collisions off infinitely massive objects, such as the wall of the box) only conserve energy as the wall "sucks up" momentum while not changing its velocity.  Everywhere else in this document where the word "collision" is used, I am talking about a deflection.
+
+### Math for Elastic Deflection
+Imagine that a regular-polygonal object is traveling toward a wall (or more specifically, one vertex of the polygon in particular is about to strike a wall).  The object has mass (which gives it linear momentum and energy) and also a moment of inertia (which gives it angular momentum and energy).  The center of mass of the object has linear velocity, and since the object may or may not be spinning about its center of mass, it also has angular velocity.  Since there are no forces acting upon the object as it approaches the wall, these velocities are constant until it strikes the wall.
+
+Once the object strikes the wall, its linear velocity and angular velocity will change.  The wall will push against the object in the direction perpendicular to the wall's surface.  Note that this is a frictionless wall, so no portion of the force applied will be in the direction parallel to the wall.  Since this is an elastic collision, it's energy will be conserved.  If it was an inelastic collision, a fixed proportion (e.g. 90%) of the energy would be conserved, and the remainder would be lost.
+
+Our objective is to calculate what the linear velocity and angular velocity of the object is immediately following the deflection off the wall.
+
+The variables used are:
+- $v_i$ - The initial linear velocity of the object before striking the wall (known).
+- $v_f$ - The final linear velocity of the object after striking the wall (unknown).
+- $\omega_i$ - The initial angular velocity of the object before striking the wall (known).
+- $\omega_f$ - The final angular velocity of the object after striking the wall (unknown).
+- $m$ - The mass of the object (known).
+- $I$ - The moment of inertia of the object (known).
+- $E_i$ - The total initial energy of the system.
+- $E_f$ - The total final energy of the system.
+- $F$ - While not the exact force applied to the object, $F$ is proportional to the force applied to the object during the collision in the direction perpendicular to the surface of the wall.
+  - Note that, in the perfect model, the force applied to the object would happen instantaneously and be infinite.
+  - If instead the time of deflection is seen as some very very small amount of time, then the force applied is very large and finite.  This force is what $F$ is proportional to.  As the amount of time approaches 0 seconds, the actual force diverges and becomes infinite, but $F$ stays the same.
+- $\phi$ - The angle between the surface of the wall and the vector connecting the center of mass to the vertex striking the wall.
+
+Finding $v_f$ and $\omega_f$ will involve establishing a system of two equations and then solving for each.
+
+The first equation comes from the conservation of energy:
+$$E_i = E_f$$
+$$\frac{v_i^2m}{2} + \frac{\omega_i^2I}{2}  =  \frac{v_f^2m}{2} + \frac{\omega_f^2I}{2}$$
+
+The second equation comes from the coupled relationship between how the force applied to the object upon striking the wall changes the linear velocity and angular velocity.  The force applies an instantaneous accelleration to the object which is proportional to a difference in velocity (in the same way that $F$ is proportional to the force).
+- 100% of the force directly affects the linear velocity.
+- A smaller proportion of the force acts as a torque and affects the angular velocity.  This torque depends upon the angle between the angle between the surface of the wall and the vector connecting the center of mass to the vertex striking the wall.
+$$F = m(v_f-v_i)$$
+$$F\cos{\phi} = I(\omega_f-\omega_i)$$
+
+Combining the force equations produces:
+$$m(v_f-v_i)\cos{\phi} = I(\omega_f-\omega_i)$$
+
+Together, the energy conservation and coupled force equations produce a system of equations which can be used to solve for the unknown variables $v_f$ and $\omega_f$.
+$$\frac{v_i^2m}{2} + \frac{\omega_i^2I}{2}  =  \frac{v_f^2m}{2} + \frac{\omega_f^2I}{2}$$
+$$m(v_f-v_i)\cos{\phi} = I(\omega_f-\omega_i)$$
+
+First, solve for $v_f$ in the force equation:
+$$m(v_f-v_i)\cos{\phi} = I(\omega_f-\omega_i)$$
+$$v_f-v_i = \frac{I(\omega_f-\omega_i)}{m\cos{\phi}}$$
+$$v_f = v_i + \frac{I(\omega_f-\omega_i)}{m\cos{\phi}}$$
+
+The, plug that into the first equation:
+$$\frac{v_i^2m}{2} + \frac{\omega_i^2I}{2} = \frac{v_f^2m}{2} + \frac{\omega_f^2I}{2}$$
+$$\frac{v_i^2m}{2} + \frac{\omega_i^2I}{2} = \frac{(v_i + \frac{I(\omega_f-\omega_i)}{m\cos{\phi}})^2m}{2} + \frac{\omega_f^2I}{2}$$
+$$v_i^2m + \omega_i^2I = (v_i + \frac{I(\omega_f-\omega_i)}{m\cos{\phi}})^2m + \omega_f^2I$$
+$$v_i^2m + \omega_i^2I = mv_i^2 + m2v_i\frac{I(\omega_f-\omega_i)}{m\cos{\phi}} + m(\frac{I(\omega_f-\omega_i)}{m\cos{\phi}})^2 + \omega_f^2I$$
+$$\omega_i^2I = m2v_i\frac{I(\omega_f-\omega_i)}{m\cos{\phi}} + m(\frac{I(\omega_f-\omega_i)}{m\cos{\phi}})^2 + \omega_f^2I$$
+$$\omega_i^2I = 2v_i\frac{I(\omega_f-\omega_i)}{\cos{\phi}} + m\frac{I^2(\omega_f-\omega_i)^2}{m^2\cos^2{\phi}} + \omega_f^2I$$
+$$\omega_i^2I = 2v_i\frac{I(\omega_f-\omega_i)}{\cos{\phi}} + m\frac{I^2(\omega_f^2-2\omega_f\omega_i+\omega_i^2)}{m^2\cos^2{\phi}} + \omega_f^2I$$
+$$\omega_i^2I = \frac{2v_iI}{\cos{\phi}}\omega_f - \frac{2v_iI\omega_i}{\cos{\phi}} + m\frac{I^2(\omega_f^2-2\omega_f\omega_i+\omega_i^2)}{m^2\cos^2{\phi}} + \omega_f^2I$$
+$$\omega_i^2I = \frac{2v_iI}{\cos{\phi}}\omega_f - \frac{2v_iI\omega_i}{\cos{\phi}} + \frac{I^2(\omega_f^2-2\omega_f\omega_i+\omega_i^2)}{m\cos^2{\phi}} + \omega_f^2I$$
+$$\omega_i^2I = \frac{2v_iI}{\cos{\phi}}\omega_f - \frac{2v_iI\omega_i}{\cos{\phi}} + \frac{I^2}{m\cos^2{\phi}}\omega_f^2 - \frac{2I^2\omega_i}{m\cos^2{\phi}}\omega_f + \frac{I^2\omega_i^2}{m\cos^2{\phi}} + I\omega_f^2$$
+$$0 = 
+(- \omega_i^2I - \frac{2v_iI\omega_i}{\cos{\phi}} + \frac{I^2\omega_i^2}{m\cos^2{\phi}})
++ (\frac{2v_iI}{\cos{\phi}} - \frac{2I^2\omega_i}{m\cos^2{\phi}})\omega_f
++ (\frac{I^2}{m\cos^2{\phi}} + I)\omega_f^2$$
+
+Now, the quadratic formula can be used to solve for $\omega_f$:
+$$\omega_f = \frac{-b \pm \sqrt{b^2-4ac}}{2a}$$
+$$a = \frac{I^2}{m\cos^2{\phi}} + I$$
+$$b = \frac{2v_iI}{\cos{\phi}} - \frac{2I^2\omega_i}{m\cos^2{\phi}}$$
+$$c = - \omega_i^2I - \frac{2v_iI\omega_i}{\cos{\phi}} + \frac{I^2\omega_i^2}{m\cos^2{\phi}}$$
+
+Within the square root, $b^2$ is:
+$$b^2 = (\frac{2v_iI}{\cos{\phi}} - \frac{2I^2\omega_i}{m\cos^2{\phi}})^2$$
+$$b^2 = (\frac{2v_iI}{\cos{\phi}})^2 - 2(\frac{2v_iI}{\cos{\phi}})(\frac{2I^2\omega_i}{m\cos^2{\phi}}) + (\frac{2I^2\omega_i}{m\cos^2{\phi}})^2$$
+$$b^2 = \frac{4v_i^2I^2}{\cos^2{\phi}} - \frac{8v_iI^3\omega_i}{m\cos^3{\phi}} + \frac{4I^4\omega_i^2}{m^2\cos^4{\phi}}$$
+
+...and $-4ac$ is:
+$$-4ac = -4 (\frac{I^2}{m\cos^2{\phi}} + I)(- \omega_i^2I - \frac{2v_iI\omega_i}{\cos{\phi}} + \frac{I^2\omega_i^2}{m\cos^2{\phi}})$$
+$$-4ac = -4 (\frac{I^2}{m\cos^2{\phi}})(- \omega_i^2I - \frac{2v_iI\omega_i}{\cos{\phi}} + \frac{I^2\omega_i^2}{m\cos^2{\phi}}) - 4I(- \omega_i^2I - \frac{2v_iI\omega_i}{\cos{\phi}} + \frac{I^2\omega_i^2}{m\cos^2{\phi}})$$
+$$-4ac = -4 (\frac{I^2}{m\cos^2{\phi}})(- \omega_i^2I - \frac{2v_iI\omega_i}{\cos{\phi}} + \frac{I^2\omega_i^2}{m\cos^2{\phi}}) + 4\omega_i^2I^2 + \frac{8v_iI^2\omega_i}{\cos{\phi}} - \frac{4I^3\omega_i^2}{m\cos^2{\phi}}$$
+$$-4ac = \frac{4I^3\omega_i^2}{m\cos^2{\phi}} + \frac{8v_iI^3\omega_i}{m\cos^3{\phi}} - \frac{4I^4\omega_i^2}{m^2\cos^4{\phi}} + 4\omega_i^2I^2 + \frac{8v_iI^2\omega_i}{\cos{\phi}} - \frac{4I^3\omega_i^2}{m\cos^2{\phi}}$$
+$$-4ac = \frac{8v_iI^3\omega_i}{m\cos^3{\phi}} - \frac{4I^4\omega_i^2}{m^2\cos^4{\phi}} + 4\omega_i^2I^2 + \frac{8v_iI^2\omega_i}{\cos{\phi}}$$
+
+... so, $b^2-4ac$ is:
+$$b^2-4ac = \frac{4v_i^2I^2}{\cos^2{\phi}} - \frac{8v_iI^3\omega_i}{m\cos^3{\phi}} + \frac{4I^4\omega_i^2}{m^2\cos^4{\phi}} + \frac{8v_iI^3\omega_i}{m\cos^3{\phi}} - \frac{4I^4\omega_i^2}{m^2\cos^4{\phi}} + 4\omega_i^2I^2 + \frac{8v_iI^2\omega_i}{\cos{\phi}}$$
+$$b^2-4ac = \frac{4v_i^2I^2}{\cos^2{\phi}} + 4\omega_i^2I^2 + \frac{8v_iI^2\omega_i}{\cos{\phi}}$$
+$$b^2-4ac = 4I^2(\frac{v_i^2}{\cos^2{\phi}} + \omega_i^2 + \frac{2v_i\omega_i}{\cos{\phi}})$$
+$$b^2-4ac = 4I^2(\frac{v_i}{\cos{\phi}} + \omega_i)^2$$
+
+... Hence, there is no imaginary component in the numerator since:
+$$\sqrt{b^2-4ac} = \sqrt{4I^2(\frac{v_i}{\cos{\phi}} + \omega_i)^2}$$
+$$\sqrt{b^2-4ac} = 2I(\frac{v_i}{\cos{\phi}} + \omega_i)$$
+
+Therefore, the full numerator is:
+$$-b \pm \sqrt{b^2-4ac} = -(\frac{2v_iI}{\cos{\phi}} - \frac{2I^2\omega_i}{m\cos^2{\phi}}) \pm 2I(\frac{v_i}{\cos{\phi}} + \omega_i)$$
+$$-b \pm \sqrt{b^2-4ac} = -\frac{2v_iI}{\cos{\phi}} + \frac{2I^2\omega_i}{m\cos^2{\phi}} \pm \frac{2Iv_i}{\cos{\phi}} \pm 2I\omega_i$$
+
+If the $\pm$ was $+$, then:
+$$-b + \sqrt{b^2-4ac} = -\frac{2v_iI}{\cos{\phi}} + \frac{2I^2\omega_i}{m\cos^2{\phi}} + \frac{2Iv_i}{\cos{\phi}} + 2I\omega_i$$
+$$-b + \sqrt{b^2-4ac} = \frac{2I^2\omega_i}{m\cos^2{\phi}} + 2I\omega_i$$
+
+...and, so:
+$$\frac{-b \pm \sqrt{b^2-4ac}}{2a} = \frac{\frac{2I^2\omega_i}{m\cos^2{\phi}} + 2I\omega_i}{2(\frac{I^2}{m\cos^2{\phi}} + I)}$$
+$$\frac{-b \pm \sqrt{b^2-4ac}}{2a} = \frac{\frac{2I^2\omega_i}{m\cos^2{\phi}} + 2I\omega_i}{\frac{2I^2}{m\cos^2{\phi}} + 2I}$$
+$$\frac{-b \pm \sqrt{b^2-4ac}}{2a} = \frac{\omega_i\frac{2I^2}{m\cos^2{\phi}} + 2I}{\frac{2I^2}{m\cos^2{\phi}} + 2I}$$
+$$\frac{-b \pm \sqrt{b^2-4ac}}{2a} = \omega_i$$
+
+This solution ($\omega_f=\omega_i$, and therefore $v_i=v_f$) indicates the object passed through the wall, keeping its velocities the same.  This is not the answer we are looking for.
+
+And so, the $\pm$ is $-$, leading to:
+$$-b - \sqrt{b^2-4ac} = -\frac{2v_iI}{\cos{\phi}} + \frac{2I^2\omega_i}{m\cos^2{\phi}} - \frac{2Iv_i}{\cos{\phi}} - 2I\omega_i$$
+$$-b - \sqrt{b^2-4ac} = -\frac{4v_iI}{\cos{\phi}} + \frac{2I^2\omega_i}{m\cos^2{\phi}} - 2I\omega_i$$
+
+...and, so:
+$$\frac{-b \pm \sqrt{b^2-4ac}}{2a} = \frac{-\frac{4v_iI}{\cos{\phi}} + \frac{2I^2\omega_i}{m\cos^2{\phi}} - 2I\omega_i}{2(\frac{I^2}{m\cos^2{\phi}} + I)}$$
+$$\frac{-b \pm \sqrt{b^2-4ac}}{2a} = \frac{-\frac{2v_i}{\cos{\phi}} + \frac{I\omega_i}{m\cos^2{\phi}} - \omega_i}{\frac{I}{m\cos^2{\phi}} + 1}$$
+$$\frac{-b \pm \sqrt{b^2-4ac}}{2a} = \frac{-2v_im\cos{\phi} + I\omega_i - \omega_im\cos^2{\phi}}{I + m\cos^2{\phi}}$$
+$$\omega_f = \frac{-2v_im\cos{\phi} + I\omega_i - \omega_im\cos^2{\phi}}{I + m\cos^2{\phi}}$$
+
+Then, $v_f$ can be solved for using a previous equation:
+$$v_f = v_i + \frac{I(\omega_f-\omega_i)}{m\cos{\phi}}$$
+$$v_f = v_i + \frac{I(\frac{-2v_im\cos{\phi} + I\omega_i - \omega_im\cos^2{\phi}}{I + m\cos^2{\phi}}-\omega_i)}{m\cos{\phi}}$$
+$$v_f = v_i + \frac{I(\frac{-2v_im\cos{\phi} + I\omega_i - \omega_im\cos^2{\phi}}{I + m\cos^2{\phi}}-\frac{\omega_i(I + m\cos^2{\phi})}{I + m\cos^2{\phi}})}{m\cos{\phi}}$$
+$$v_f = v_i + \frac{I(\frac{-2v_im\cos{\phi} + I\omega_i - \omega_im\cos^2{\phi}}{I + m\cos^2{\phi}}-\frac{\omega_iI + \omega_im\cos^2{\phi}}{I + m\cos^2{\phi}})}{m\cos{\phi}}$$
+$$v_f = v_i + \frac{I(\frac{-2v_im\cos{\phi} + I\omega_i - \omega_im\cos^2{\phi} - (\omega_iI + \omega_im\cos^2{\phi})}{I + m\cos^2{\phi}})}{m\cos{\phi}}$$
+$$v_f = v_i + \frac{I(\frac{-2v_im\cos{\phi} + I\omega_i - \omega_im\cos^2{\phi} - \omega_iI - \omega_im\cos^2{\phi}}{I + m\cos^2{\phi}})}{m\cos{\phi}}$$
+$$v_f = v_i + \frac{I(\frac{-2v_im\cos{\phi} - \omega_im\cos^2{\phi} - \omega_im\cos^2{\phi}}{I + m\cos^2{\phi}})}{m\cos{\phi}}$$
+$$v_f = v_i + \frac{I(\frac{-2v_im\cos{\phi} - 2\omega_im\cos^2{\phi}}{I + m\cos^2{\phi}})}{m\cos{\phi}}$$
+$$v_f = v_i + I(\frac{-2v_i - 2\omega_i\cos{\phi}}{I + m\cos^2{\phi}})$$
+$$v_f = v_i + \frac{-2Iv_i - 2I\omega_i\cos{\phi}}{I + m\cos^2{\phi}}$$
+$$v_f = v_i + \frac{-2v_i - 2\omega_i\cos{\phi}}{1 + \frac{m}{I}\cos^2{\phi}}$$
+$$v_f = v_i - 2\frac{v_i + \omega_i\cos{\phi}}{1 + \frac{m}{I}\cos^2{\phi}}$$
+$$v_f = v_i - 2\frac{v_i + \omega_i\cos{\phi}}{1 + \frac{m\cos^2{\phi}}{I}}$$
+
+And now that I have this form, I think I can also rewrite the $\omega_f$ equation to look similar:
+$$\omega_f = \frac{-2v_im\cos{\phi} + I\omega_i - \omega_im\cos^2{\phi}}{I + m\cos^2{\phi}}$$
+$$\omega_f = \omega_i - \omega_i + \frac{-2v_im\cos{\phi} + I\omega_i - \omega_im\cos^2{\phi}}{I + m\cos^2{\phi}}$$
+$$\omega_f = \omega_i - \frac{\omega_i(I + m\cos^2{\phi})}{I + m\cos^2{\phi}} + \frac{-2v_im\cos{\phi} + I\omega_i - \omega_im\cos^2{\phi}}{I + m\cos^2{\phi}}$$
+$$\omega_f = \omega_i - \frac{\omega_iI + \omega_im\cos^2{\phi}}{I + m\cos^2{\phi}} + \frac{-2v_im\cos{\phi} + I\omega_i - \omega_im\cos^2{\phi}}{I + m\cos^2{\phi}}$$
+$$\omega_f = \omega_i + \frac{-(\omega_iI + \omega_im\cos^2{\phi})-2v_im\cos{\phi} + I\omega_i - \omega_im\cos^2{\phi}}{I + m\cos^2{\phi}}$$
+$$\omega_f = \omega_i + \frac{-\omega_iI - \omega_im\cos^2{\phi}-2v_im\cos{\phi} + I\omega_i - \omega_im\cos^2{\phi}}{I + m\cos^2{\phi}}$$
+$$\omega_f = \omega_i + \frac{- \omega_im\cos^2{\phi}-2v_im\cos{\phi} - \omega_im\cos^2{\phi}}{I + m\cos^2{\phi}}$$
+$$\omega_f = \omega_i + \frac{- 2\omega_im\cos^2{\phi}-2v_im\cos{\phi}}{I + m\cos^2{\phi}}$$
+$$\omega_f = \omega_i - 2\frac{\omega_im\cos^2{\phi}+v_im\cos{\phi}}{I + m\cos^2{\phi}}$$
+$$\omega_f = \omega_i - 2\frac{\omega_i+\frac{v_i}{\cos{\phi}}}{\frac{I}{m\cos^2{\phi}} + 1}$$
+$$\omega_f = \omega_i - 2\frac{\omega_i+\frac{v_i}{\cos{\phi}}}{1 + \frac{I}{m\cos^2{\phi}}}$$
+
+(meh, these last two might run into divide by 0 errors, I will skip them)
+
+Therefore, the two solved equations for the new velocities, $v_f$ and $\omega_f$ are:
+$$v_f = v_i - 2\frac{v_i + \omega_i\cos{\phi}}{1 + \frac{m\cos^2{\phi}}{I}}$$
+$$\omega_f = \omega_i - 2\frac{\omega_im\cos^2{\phi}+v_im\cos{\phi}}{I + m\cos^2{\phi}}$$
+
+Some sanity checks for these equations:
+- If $\phi=\pi/2$ (i.e., the surface of the wall is perfectly parallel to the line between the center of mass of the object and the striking vertex), then $v_f=-v_i$ and $\omega_f=\omega_i$.  This correlates with the object bouncing straight back at the same velocity and the rotational velocity remaining the same which is what one would expect.
+- If $\phi=\pi/2 + \epsilon$ for some small positive $0<\epsilon<<1$ (i.e., the object is slightly off-alignment from the previous example), then $v_f \approx -v_i$ and $\omega_f \approx \omega_i$.  More importantly, however, $\cos{\phi} < 0$, which means:
+  - A positive $\omega_i$ would speed-up after striking at a magnitude ~proportional to $v_i$ since the striking force is supporting its rotation,
+  - A negative $\omega_i$ would slow-down after striking at a magnitude ~proportional to $v_i$ since the striking force is opposing it rotation,
+  - If $\omega_i>0$, then $|v_f|<|v_i|$ which makes sense since the increased rotation would slow down the rebound speed of the object after striking, and
+  - If $\omega_i<0$, then $|v_f|>|v_i|$ which makes sense since the rotation of the object would "launch" the object away from the wall faster than it approached.
+- This previous case is significant because it is highly important that the "directions" in this problem are well established and consistent.  What we would expect, and what is consistent with this sanity check, are the following:
+  - $v$ is positive when traveling toward the wall and negative when traveling away from the wall.
+  - $\omega$ is positive when the object is rotating counter-clockwise (right-hand rule).
+  - $\phi$ (for $-\pi<\phi<\pi$) is positive when going from the wall to the line between the center of mass of the object and the striking vertex counter-clockwise (right-hand rule).
