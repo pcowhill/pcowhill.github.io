@@ -15,35 +15,42 @@ export function bouncingDie() {
     context.fillRect(0, 0, canv.width, canv.height);
     let die = {
         cartesian: {
-            pos: { x: canv.width / 2, y: canv.height / 2 },
+            pos: { x: 3, y: 3 },
             vel: { x: 0, y: 0 },
-            acc: { x: 0, y: 0 }
+            acc: { x: 0, y: -9.8 }
         },
         polar: {
-            pos: 0,
-            vel: 0.3,
+            pos: Math.PI / 4,
+            vel: 0,
             acc: 0
         },
-        radius: 50
+        radius: 0.5,
+        mass: 5,
+        momentOfInertia: 1 / 12 * 5 * (1 * 1) // https://en.wikipedia.org/wiki/List_of_moments_of_inertia
     };
     function drawDie(theDie, theCanv, theContext) {
         // Draw Background
         theContext.fillStyle = "rgb(240, 240, 240)";
         theContext.fillRect(0, 0, theCanv.width, theCanv.height);
+        // Convert 2-D space to image space
+        const metersPerPixelScale = 0.01;
+        const posX = die.cartesian.pos.x / metersPerPixelScale;
+        const posY = die.cartesian.pos.y / metersPerPixelScale;
+        const radius = die.radius / metersPerPixelScale;
         // Draw Center
         theContext.fillStyle = "red";
         theContext.beginPath();
-        theContext.arc(die.cartesian.pos.x, theCanv.height - die.cartesian.pos.y, 10, 0, 2 * Math.PI);
+        theContext.arc(posX, theCanv.height - posY, 10, 0, 2 * Math.PI);
         theContext.fill();
         theContext.stroke();
         // Draw Edges
         for (let edge = 0; edge < 4; edge++) {
             let angle1 = die.polar.pos + edge * Math.PI / 2;
-            let xPos1 = die.cartesian.pos.x + die.radius * Math.cos(angle1);
-            let yPos1 = die.cartesian.pos.y + die.radius * Math.sin(angle1);
+            let xPos1 = posX + radius * Math.cos(angle1);
+            let yPos1 = posY + radius * Math.sin(angle1);
             let angle2 = die.polar.pos + (edge + 1) * Math.PI / 2;
-            let xPos2 = die.cartesian.pos.x + die.radius * Math.cos(angle2);
-            let yPos2 = die.cartesian.pos.y + die.radius * Math.sin(angle2);
+            let xPos2 = posX + radius * Math.cos(angle2);
+            let yPos2 = posY + radius * Math.sin(angle2);
             theContext.strokeStyle = "orange";
             theContext.lineWidth = 10;
             theContext.beginPath();
@@ -54,8 +61,8 @@ export function bouncingDie() {
         // Draw Vertices
         for (let vertex = 0; vertex < 4; vertex++) {
             let angle = die.polar.pos + vertex * Math.PI / 2;
-            let xPos = die.cartesian.pos.x + die.radius * Math.cos(angle);
-            let yPos = die.cartesian.pos.y + die.radius * Math.sin(angle);
+            let xPos = posX + radius * Math.cos(angle);
+            let yPos = posY + radius * Math.sin(angle);
             theContext.fillStyle = "blue";
             theContext.lineWidth = 1;
             theContext.beginPath();
@@ -64,14 +71,13 @@ export function bouncingDie() {
         }
     }
     function moveDie(theDie, timeDelta, theCanv, theContext) {
-        // Update Velocity
+        // Update velocity using acceleration
         die.cartesian.vel.x += die.cartesian.acc.x * timeDelta;
         die.cartesian.vel.y += die.cartesian.acc.y * timeDelta;
         die.polar.vel += die.polar.acc * timeDelta;
-        // Determine Imminent Collisions and when they will occur
-        let goAgain = true;
-        while (goAgain) {
-            goAgain = false;
+        // Handle collisions and update position using velocity
+        let maximumChecks = 10;
+        for (let checkNumber = 0; checkNumber < maximumChecks; checkNumber++) {
             let partialTimeDeltas = [timeDelta, timeDelta, timeDelta, timeDelta];
             for (let vertex = 0; vertex < 4; vertex++) {
                 // Check where this point will move to
@@ -102,25 +108,26 @@ export function bouncingDie() {
             die.cartesian.vel.y += die.cartesian.acc.y * timeStep;
             die.polar.vel += die.polar.acc * timeStep;
             // Check if there is more time to simulate
-            if (timeStep < timeDelta) {
-                // Alter velocity using instant forces
-                let mass = 4;
-                let momentOfInertia = 4;
-                let linerMomentum = die.cartesian.vel.y * mass;
-                let linerEnegry = die.cartesian.vel.y * die.cartesian.vel.y * mass / 2;
-                let angularMomentum = die.polar.vel * momentOfInertia;
-                let angularEnergy = die.polar.vel * die.polar.vel * momentOfInertia / 2;
-                let totalMomentum = Math.abs(linerMomentum) + Math.abs(angularMomentum);
-                let totalEnergy = linerEnegry + angularEnergy;
-                // Move time forward, and go again
-                timeDelta -= timeStep;
-                goAgain = true;
+            if (timeStep >= timeDelta)
+                break;
+            // Alter velocity using instant forces for any colliding vertex
+            for (let vertex = 0; vertex < 4; vertex++) {
+                if (partialTimeDeltas[vertex] <= timeStep) { // == should be fine since they should be equal, but <= is more cautious
+                    const phi = die.polar.pos + vertex * Math.PI / 2 - Math.PI;
+                    const v_i = -die.cartesian.vel.y;
+                    const w_i = die.polar.vel;
+                    const m = die.mass;
+                    const I = die.momentOfInertia;
+                    const cos_phi = Math.cos(phi);
+                    const v_f = v_i - 2 * (v_i + w_i * cos_phi) / (1 + m * cos_phi * cos_phi / I);
+                    const w_f = w_i - 2 * (w_i * cos_phi * cos_phi + v_i * cos_phi) / (I / m + cos_phi * cos_phi);
+                    die.polar.vel = w_f;
+                    die.cartesian.vel.y = -v_f;
+                }
             }
+            // Move time forward, and go again
+            timeDelta -= timeStep;
         }
-        // Update Position
-        die.cartesian.pos.x += die.cartesian.vel.x * timeDelta;
-        die.cartesian.pos.y += die.cartesian.vel.y * timeDelta;
-        die.polar.pos += die.polar.vel * timeDelta;
     }
     function getVertexPosY(die, vertex, timeDelta) {
         const cPos = die.cartesian.pos.y;
@@ -133,7 +140,7 @@ export function bouncingDie() {
         const t = timeDelta;
         const cPosNew = cPos + cVel * t + cAcc * t * t / 2;
         const pPosNew = pPos + pVel * t + pAcc * t * t / 2;
-        const newVertexPosition = cPosNew + r * Math.cos(pPosNew + vertex * Math.PI / 2);
+        const newVertexPosition = cPosNew + r * Math.sin(pPosNew + vertex * Math.PI / 2);
         return newVertexPosition;
     }
     // Setup Time

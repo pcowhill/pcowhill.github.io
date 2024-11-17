@@ -262,6 +262,7 @@ $$\omega_f = \omega_i + \frac{-\omega_iI - \omega_im\cos^2{\phi}-2v_im\cos{\phi}
 $$\omega_f = \omega_i + \frac{- \omega_im\cos^2{\phi}-2v_im\cos{\phi} - \omega_im\cos^2{\phi}}{I + m\cos^2{\phi}}$$
 $$\omega_f = \omega_i + \frac{- 2\omega_im\cos^2{\phi}-2v_im\cos{\phi}}{I + m\cos^2{\phi}}$$
 $$\omega_f = \omega_i - 2\frac{\omega_im\cos^2{\phi}+v_im\cos{\phi}}{I + m\cos^2{\phi}}$$
+$$\omega_f = \omega_i - 2\frac{\omega_i\cos^2{\phi}+v_i\cos{\phi}}{\frac{I}{m} + \cos^2{\phi}}$$
 $$\omega_f = \omega_i - 2\frac{\omega_i+\frac{v_i}{\cos{\phi}}}{\frac{I}{m\cos^2{\phi}} + 1}$$
 $$\omega_f = \omega_i - 2\frac{\omega_i+\frac{v_i}{\cos{\phi}}}{1 + \frac{I}{m\cos^2{\phi}}}$$
 
@@ -269,7 +270,7 @@ $$\omega_f = \omega_i - 2\frac{\omega_i+\frac{v_i}{\cos{\phi}}}{1 + \frac{I}{m\c
 
 Therefore, the two solved equations for the new velocities, $v_f$ and $\omega_f$ are:
 $$v_f = v_i - 2\frac{v_i + \omega_i\cos{\phi}}{1 + \frac{m\cos^2{\phi}}{I}}$$
-$$\omega_f = \omega_i - 2\frac{\omega_im\cos^2{\phi}+v_im\cos{\phi}}{I + m\cos^2{\phi}}$$
+$$\omega_f = \omega_i - 2\frac{\omega_i\cos^2{\phi}+v_i\cos{\phi}}{\frac{I}{m} + \cos^2{\phi}}$$
 
 Some sanity checks for these equations:
 - If $\phi=\pi/2$ (i.e., the surface of the wall is perfectly parallel to the line between the center of mass of the object and the striking vertex), then $v_f=-v_i$ and $\omega_f=\omega_i$.  This correlates with the object bouncing straight back at the same velocity and the rotational velocity remaining the same which is what one would expect.
