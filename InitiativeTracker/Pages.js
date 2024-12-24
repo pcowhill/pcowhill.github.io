@@ -4,22 +4,113 @@ import { EventListener, EventListenerList } from "./EventListeners.js";
 export const PageType = {
   MainMenu: 0,
   PreEncounter: 1,
-  Encounter: 2
+  Encounter: 2,
+  Settings: 3
 }
 
 export class MainMenuPage {
-  constructor(selectNewEncounter) {
+  constructor(
+    selectNewEncounter,
+    selectSettings
+  ) {
     this.pageType = PageType.MainMenu;
     this.eventListeners = new EventListenerList([
-      new EventListener("newEncounterButton", "click", selectNewEncounter)
+      new EventListener("newEncounterButton", "click", selectNewEncounter),
+      new EventListener("settingsButton", "click", selectSettings)
     ]);
   }
   getHtml() {
     return new HtmlCode(`
       <div id="mainMenu">
         <button class="primary" id="newEncounterButton">New Encounter</button>
+        <button class="primary" id="settingsButton">Settings</button>
       </div>
     `);
+  }
+}
+
+export class SettingsPage {
+  constructor(
+    enterMainMenu,
+    enterDefaultCharacterIds
+  ) {
+    this.pageType = PageType.Settings;
+    this.eventListeners = new EventListenerList([
+      new EventListener("returnToMainButton", "click", enterMainMenu),
+      new EventListener("editDefaultCharacters", "click", enterDefaultCharacterIds)
+    ]);
+  }
+  getHtml() {
+    return new HtmlCode(`
+      <div id="settingsPage">
+        <h2>Settings</h2>
+        <button class="secondary" id="editDefaultCharacters">Default Characters</button>
+        <br>
+        <button class="secondary" id="returnToMainButton">Back to Main Menu</button>
+      </div>
+    `)
+  }
+}
+
+export class EditDefaultCharacterIdsSubpage {
+  constructor(
+    enterSettings,
+    addCharacter,
+    editCharacter,
+    removeCharacter,
+    removeAllCharacters,
+    presetCharacters
+  ) {
+    this.pageType = PageType.Settings;
+    this.editCharacter = editCharacter;
+    this.removeCharacter = removeCharacter;
+    this.eventListeners = new EventListenerList([
+      new EventListener("returnToSettingsButton", "click", enterSettings),
+      new EventListener("addCharacterButton", "click", addCharacter),
+      new EventListener("removeAllCharactersButton", "click", removeAllCharacters),
+      new EventListener("presetCharactersButton", "click", presetCharacters)
+    ])
+  }
+  getHtml(sessionData) {
+    let htmlCode = new HtmlCode("");
+    htmlCode.append(`<div id="settingsPage">`);
+
+    // Sub Page Title
+    htmlCode.append(`<h2>Settings</h2>`)
+    htmlCode.append(`<h3>Edit Default Characters</h3>`)
+
+    // Buttons
+    htmlCode.append(`<button class="secondary" id="addCharacterButton">Add New Character</button>`)
+
+    // Default Character List
+    for (let i = 0; i < sessionData.defaultCharacterIds.length; i++) {
+      htmlCode.append(`
+        <div class="otherCreatures">
+          <div class="currentCreatureName">${sessionData.defaultCharacterIds[i]}</div>
+          <div class="buttonHolder">
+            <button class="remove" id="remove-${i}">Remove</button>
+            <button class="edit" id="edit-${i}">Edit</button>
+          </div>
+        </div>
+      `);
+
+      // Ensure there exist sufficient event handlers regarless of added or removed entries.
+      let editEventListener = new EventListener(`edit-${i}`, "click", () => {this.editCharacter(i)});
+      this.eventListeners.expire(editEventListener);
+      this.eventListeners.append(editEventListener);
+      let removeEventListener = new EventListener(`remove-${i}`, "click", () => {this.removeCharacter(i)});
+      this.eventListeners.expire(removeEventListener);
+      this.eventListeners.append(removeEventListener);
+    }
+
+    htmlCode.append(`<br>`);
+    htmlCode.append(`<button class="secondary" id="removeAllCharactersButton">Remove All</button>`);
+    htmlCode.append(`<button class="secondary" id="presetCharactersButton">Preset Characters</button>`);
+    htmlCode.append(`<br>`);
+    htmlCode.append(`<button class="secondary" id="returnToSettingsButton">Back to Settings</button>`);
+
+    htmlCode.append(`</div>`);
+    return htmlCode;
   }
 }
 
@@ -32,10 +123,11 @@ export class PreEncounterPage {
     encounterName,
     editInitiative,
     removeCreature,
-    removeAllCreatures
+    removeAllCreatures,
+    defaultCharacterIds
   ) {
     this.pageType = PageType.PreEncounter;
-    this.characterIds = ["Bloop", "Cyril", "Nahala", "T'avi", "Toross"];
+    this.characterIds = defaultCharacterIds;
     this.encounterName = encounterName;
     this.editInitiative = editInitiative;
     this.removeCreature = removeCreature;
