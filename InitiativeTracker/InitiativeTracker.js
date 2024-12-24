@@ -217,6 +217,8 @@ export class InitiativeTracker {
       this.delayTurn,
       this.endTurn,
       this.hitCreature,
+      this.killCreature,
+      this.reviveCreature,
       this.sessionData
     );
     this.update();
@@ -260,5 +262,25 @@ export class InitiativeTracker {
       this.update();
     }
     this.currentModal.activateNumberInput("Enter Damage Delt:", 5, dealDamage);
+  }
+  killCreature = (creatureId) => {
+    let confirmKill = () => {
+      this.sessionData.killCreature(creatureId);
+      this.update();
+    }
+    this.currentModal.activateConfirm(`Kill ${creatureId}?`, confirmKill);
+  }
+  reviveCreature = (creatureId) => {
+    if (this.sessionData.defaultCharacterIds.includes(creatureId)) {
+      this.sessionData.reviveCreature(creatureId);
+      this.update();
+    }
+    else {
+      let setHealth = (hitpoints) => {
+        this.sessionData.reviveCreature(creatureId, hitpoints);
+        this.update();
+      }
+      this.currentModal.activateNumberInput("Enter Hitpoints:", 5, setHealth);
+    }
   }
 }

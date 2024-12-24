@@ -46,6 +46,28 @@ export class SessionData {
           this.deadList.push(this.initiativeList[i]);
           this.initiativeList.splice(i, 1);
         }
+        break;
+      }
+    }
+  }
+  killCreature(creatureId) {
+    for (let i = 0; i < this.initiativeList.length; i++) {
+      if (this.initiativeList[i].creatureId === creatureId) {
+        this.deadList.push(this.initiativeList[i]);
+        this.initiativeList.splice(i, 1);
+        break;
+      }
+    }
+  }
+  reviveCreature(creatureId, hitpoints) {
+    for (let i = 0; i < this.deadList.length; i++) {
+      if (this.deadList[i].creatureId === creatureId) {
+        this.initiativeList.push(this.deadList[i]);
+        this.deadList.splice(i, 1);
+        if (hitpoints !== undefined) {
+          this.initiativeList[this.initiativeList.length - 1].hitpointsCurrent = hitpoints;
+        }
+        break;
       }
     }
   }

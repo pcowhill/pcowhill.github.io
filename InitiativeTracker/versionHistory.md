@@ -4,3 +4,4 @@ v1.2 - Large Refactor - Changed from single-file spaghetti code with global vari
 v1.3 - Added HP tracking - Hitpoints are now tracked in addition to initiative.  Monsters will automatically perish once their hitpoints goes below 1.
 v1.4 - Tons of new buttons - Added buttons to edit/remove creature entries when building an encounter, there are more buttons to end/reset an encounter on more pages, large changes now include confirmation messages.
 v1.5 - Added Settings and Default Characters - Adding setting page that can be accessed from the main menu.  Additionally, the first setting has been added which allows for the user to change the default characters from Bloop, Cyril, etc. to whomever.  This information is saved within the cookies.
+v1.6 - Added RIP & Revive Mechanics - Characters can now be killed even when it is not their turn.  In addition, any dead creature can be revived to get back into the battle!
