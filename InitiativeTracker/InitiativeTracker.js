@@ -1,4 +1,4 @@
-import { PageType, MainMenuPage, PreEncounterPage, EncounterPage } from "./Pages.js";
+import { PageType, MainMenuPage, SettingsPage, PreEncounterPage, EncounterPage, EditDefaultCharacterIdsSubpage } from "./Pages.js";
 import { HtmlCode, SessionData } from "./DataStructures.js";
 import { Modal } from "./Modal.js";
 import { CookieHandler } from "./Cookies.js";
@@ -10,7 +10,7 @@ export class InitiativeTracker {
     this.htmlId = htmlId;
     this.cookieHandler = new CookieHandler();
     this.sessionData = this.cookieHandler.getSessionData();
-    this.currentPage = new MainMenuPage(this.selectNewEncounter);
+    this.currentPage = new MainMenuPage(this.selectNewEncounter, this.enterSettings);
     this.currentModal = new Modal(this.update);
     switch (this.cookieHandler.getPageType()) {
       case PageType.MainMenu:
@@ -21,8 +21,11 @@ export class InitiativeTracker {
       case PageType.Encounter:
         this.confirmStartEncounter();
         break;
+      case PageType.Settings:
+        this.enterMainMenu();
+        break;
       default:
-        alert("Invalid PageType; something is wrong...")
+        alert("ERROR 3: Invalid PageType; something is wrong...")
     }
     this.update();
   }
@@ -39,8 +42,80 @@ export class InitiativeTracker {
   // ##################################################
   // Main Menu Logic
   // ##################################################
+  enterMainMenu = () => {
+    this.currentPage.eventListeners.removeAll();
+    this.currentPage = new MainMenuPage(
+      this.selectNewEncounter, 
+      this.enterSettings
+    );
+    this.update();
+  }
   selectNewEncounter = () => {
     this.currentModal.activateTextInput("Encounter Name:", "Tavern Brawl", this.enterPreEncounter);
+  }
+
+  // ##################################################
+  // Settings Logic
+  // ##################################################
+  enterSettings = () => {
+    this.currentPage.eventListeners.removeAll();
+    this.currentPage = new SettingsPage(this.enterMainMenu, this.enterDefaultCharacterIds);
+    this.update();
+  }
+  // Edit Default Character Ids Subpage
+  enterDefaultCharacterIds = () => {
+    this.currentPage.eventListeners.removeAll();
+
+    // Logical Functions
+    let addCharacter = () => {
+      let reportCharacterId = (creatureId) => {
+        this.sessionData.defaultCharacterIds.push(creatureId);
+        this.update();
+      }
+      this.currentModal.activateTextInput("Enter Name:", "Hero", reportCharacterId);
+    }
+    let editCharacter = (defaultCharactersListIndex) => {
+      let reportCharacterId = (creatureId) => {
+        this.sessionData.defaultCharacterIds[defaultCharactersListIndex] = creatureId;
+        this.update();
+      }
+      let previousName = this.sessionData.defaultCharacterIds[defaultCharactersListIndex];
+      this.currentModal.activateTextInput("Enter Name:", previousName, reportCharacterId);
+    }
+    let removeCharacter = (defaultCharactersListIndex) => {
+      let confirmRemove = (creatureId) => {
+        this.sessionData.defaultCharacterIds.splice(defaultCharactersListIndex, 1);
+        this.update();
+      }
+      let characterName = this.sessionData.defaultCharacterIds[defaultCharactersListIndex];
+      this.currentModal.activateConfirm(`Remove ${characterName}?`, confirmRemove)
+    }
+    let removeAllCharacters = () => {
+      let confirmRemove = (creatureId) => {
+        this.sessionData.defaultCharacterIds = [];
+        this.update();
+      }
+      this.currentModal.activateConfirm(`Remove All Characters?`, confirmRemove)
+    }
+    let presetCharacters = () => {
+      let confirmPreset = () => {
+        let presetSessionData = new SessionData();
+        this.sessionData.defaultCharacterIds = presetSessionData.defaultCharacterIds;
+        this.update();
+      }
+      this.currentModal.activateConfirm("Populate with Presets?", confirmPreset);
+    }
+
+    // Make the page
+    this.currentPage = new EditDefaultCharacterIdsSubpage(
+      this.enterSettings,
+      addCharacter,
+      editCharacter,
+      removeCharacter,
+      removeAllCharacters,
+      presetCharacters
+    )
+    this.update();
   }
 
   // ##################################################
@@ -57,7 +132,8 @@ export class InitiativeTracker {
       this.sessionData.encounterName,
       this.editInitiative,
       this.removeCreature,
-      this.removeAllCreatures
+      this.removeAllCreatures,
+      this.sessionData.defaultCharacterIds
     );
     this.update();
   }
@@ -148,8 +224,10 @@ export class InitiativeTracker {
   endEncounter = () => {
     let confirmEndEncounter = () => {
       this.currentPage.eventListeners.removeAll();
-      this.sessionData = new SessionData();
-      this.currentPage = new MainMenuPage(this.selectNewEncounter);
+      this.sessionData.initiativeList = [];
+      this.sessionData.deadList = [];
+      this.sessionData.encounterName = "The Encounter";
+      this.currentPage = new MainMenuPage(this.selectNewEncounter, this.enterSettings);
       this.update();
     }
     this.currentModal.activateConfirm("End encounter?", confirmEndEncounter);

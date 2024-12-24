@@ -19,6 +19,7 @@ export class SessionData {
     this.initiativeList = [];
     this.deadList = [];
     this.encounterName = "The Encounter";
+    this.defaultCharacterIds = ["Bloop", "Cyril", "Nahala", "T'avi", "Toross"];
   }
   addCreatureInitiative(creatureId, initiative, hitpointsCurrent=null, hitpointsMax=null) {
     this.initiativeList.push(new DataEntry(creatureId, initiative, hitpointsCurrent, hitpointsMax));

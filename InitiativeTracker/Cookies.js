@@ -37,8 +37,10 @@ export class CookieHandler {
         return PageType.PreEncounter;
       case "Encounter":
         return PageType.Encounter;
+      case "Settings":
+        return PageType.Settings;
       default:
-        alert("Invalid PageType; something is wrong...")
+        alert("ERROR 1: Invalid PageType; something is wrong...")
     }
   }
   encodePageType(pageType) {
@@ -49,8 +51,10 @@ export class CookieHandler {
         return "PreEncounter"
       case PageType.Encounter:
         return "Encounter"
+      case PageType.Settings:
+        return "Settings"
       default:
-        alert("Invalid PageType; something is wrong...")
+        alert("ERROR 2: Invalid PageType; something is wrong...")
     }
   }
 
@@ -78,6 +82,7 @@ export class CookieHandler {
       })
     }
     dict.encounterName = sessionData.encounterName;
+    dict.defaultCharacterIds = sessionData.defaultCharacterIds;
     return JSON.stringify(dict);
   }
   decodeSessionData(encodedString) {
@@ -102,7 +107,12 @@ export class CookieHandler {
         dict.deadList[i].hitpointsMax
       )
     }
-    sessionData.encounterName = dict.encounterName;
+    if (dict.encounterName !== undefined) {
+      sessionData.encounterName = dict.encounterName;
+    }
+    if (dict.defaultCharacterIds !== undefined) {
+      sessionData.defaultCharacterIds = dict.defaultCharacterIds;
+    }
     return sessionData
   }
 
