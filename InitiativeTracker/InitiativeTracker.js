@@ -9,6 +9,8 @@ export class InitiativeTracker {
   constructor(htmlId) {
     this.htmlId = htmlId;
     this.cookieHandler = new CookieHandler();
+    // Uncomment temporarily to clear all cookies
+    // this.cookieHandler.clearAll();
     this.sessionData = this.cookieHandler.getSessionData();
     this.currentPage = new MainMenuPage(this.selectNewEncounter, this.enterSettings);
     this.currentModal = new Modal(this.update);
@@ -218,6 +220,7 @@ export class InitiativeTracker {
       this.endTurn,
       this.hitCreature,
       this.killCreature,
+      this.viewCreatureActions,
       this.reviveCreature,
       this.sessionData
     );
@@ -269,6 +272,112 @@ export class InitiativeTracker {
       this.update();
     }
     this.currentModal.activateConfirm(`Kill ${creatureId}?`, confirmKill);
+  }
+  viewCreatureActions = (creatureId) => {
+    let editInitiative = () => {
+      let setInitiative = (newInitiative) => {
+        this.sessionData.editCreatureInitiative(creatureId, newInitiative);
+        this.update();
+      }
+      let currentInitiative = this.sessionData.getCreatureDataEntry(creatureId).initiative;
+      this.currentModal.activateNumberInput("Enter Initiative:", currentInitiative, setInitiative);
+    }
+    let moveUpOnePosition = () => {
+      this.sessionData.moveCreatureUpOnePosition(creatureId);
+      this.update();
+    }
+    let moveDownOnePosition = () => {
+      this.sessionData.moveCreatureDownOnePosition(creatureId);
+      this.update();
+    }
+
+    let addEffect = () => {
+      let selectBaned = () => {
+        this.sessionData.addEffectToCreature(creatureId, "BANED", "banedIcon.png");
+        this.update();
+      }
+      let selectProne = () => {
+        this.sessionData.addEffectToCreature(creatureId, "PRONE", "proneIcon.png");
+        this.update();
+      }
+      let selectCustom = () => {
+        let setName = (name) => {
+          let setIcon = (icon) => {
+            return () => {
+              this.sessionData.addEffectToCreature(creatureId, name.toUpperCase(), icon);
+              this.update();
+            }
+          }
+          this.currentModal.activateMultipleChoiceInput(
+            "Select Icon",
+            [
+              `<img class="icon" src="banedIcon.png">`,
+              `<img class="icon" src="burnIcon.png">`,
+              `<img class="icon" src="frostIcon.png">`,
+              `<img class="icon" src="proneIcon.png">`
+            ],
+            [
+              setIcon("banedIcon.png"),
+              setIcon("burnIcon.png"),
+              setIcon("frostIcon.png"),
+              setIcon("proneIcon.png")
+            ]
+          );
+        }
+        this.currentModal.activateTextInput("Enter Effect Name:", "Baned", setName);
+      }
+
+      this.currentModal.activateMultipleChoiceInput(
+        "Select Effect",
+        ["Baned", "Prone", "Custom"],
+        [selectBaned, selectProne, selectCustom]
+      );
+    }
+
+    let removeEffect = () => {
+      let selectEffect = (effectName) => {
+        return () => {
+          this.sessionData.removeEffectFromCreature(creatureId, effectName);
+          this.update();
+        }
+      }
+      let thisCreature = this.sessionData.getCreatureDataEntry(creatureId);
+      let effectNames = [];
+      let selectEffectFunctions = [];
+      for (let i = 0; i < thisCreature.effects.length; i++) {
+        effectNames.push(thisCreature.effects[i].name);
+        selectEffectFunctions.push(selectEffect(effectNames[i]));
+      }
+      this.currentModal.activateMultipleChoiceInput(
+        "Select Effect", effectNames, selectEffectFunctions
+      );
+    }
+
+    let labelsList = [];
+    let onSelectFunctionsList = [];
+
+    if (this.sessionData.isCreatureAlive(creatureId)) {
+      if (!this.sessionData.isCreatureFirst(creatureId)) {
+        labelsList.push("Move Up");
+        onSelectFunctionsList.push(moveUpOnePosition);
+      }
+  
+      if (!this.sessionData.isCreatureLast(creatureId)) {
+        labelsList.push("Move Down");
+        onSelectFunctionsList.push(moveDownOnePosition);
+      }
+    }
+
+    labelsList.push("Add Effect");
+    onSelectFunctionsList.push(addEffect);
+
+    labelsList.push("Remove Effect");
+    onSelectFunctionsList.push(removeEffect);
+    
+    labelsList.push("Edit Initiative");
+    onSelectFunctionsList.push(editInitiative);
+
+    this.currentModal.activateMultipleChoiceInput("Select An Action", labelsList, onSelectFunctionsList)
   }
   reviveCreature = (creatureId) => {
     if (this.sessionData.defaultCharacterIds.includes(creatureId)) {

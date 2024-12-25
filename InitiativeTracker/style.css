@@ -137,7 +137,19 @@ button.hit, button.revive, button.edit, button.remove {
     position: relative;
     margin: 10 5 auto;
     padding: 5;
-    width: 120px;
+    width: 135px;
+    height: 40px;
+    font-size: 1.5em;
+    font-weight: bold;
+    overflow: hidden;
+}
+
+button.moreActions {
+    align-items: center;
+    position: relative;
+    margin: 10 5 auto;
+    padding: 5;
+    width: 270px;
     height: 40px;
     font-size: 1.5em;
     font-weight: bold;

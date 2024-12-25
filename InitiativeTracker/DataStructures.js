@@ -21,11 +21,11 @@ export class SessionData {
     this.encounterName = "The Encounter";
     this.defaultCharacterIds = ["Bloop", "Cyril", "Nahala", "T'avi", "Toross"];
   }
-  addCreatureInitiative(creatureId, initiative, hitpointsCurrent=null, hitpointsMax=null) {
-    this.initiativeList.push(new DataEntry(creatureId, initiative, hitpointsCurrent, hitpointsMax));
+  addCreatureInitiative(creatureId, initiative, hitpointsCurrent=null, hitpointsMax=null, effects=[]) {
+    this.initiativeList.push(new DataEntry(creatureId, initiative, hitpointsCurrent, hitpointsMax, effects));
   }
-  addDeadCreatureInitiative(creatureId, initiative) {
-    this.deadList.push(new DataEntry(creatureId, initiative));
+  addDeadCreatureInitiative(creatureId, initiative, hitpointsCurrent=null, hitpointsMax=null, effects=[]) {
+    this.deadList.push(new DataEntry(creatureId, initiative, hitpointsCurrent, hitpointsMax, effects));
   }
   killCurrentCreature() {
     this.deadList.push(this.initiativeList[0]);
@@ -37,6 +37,38 @@ export class SessionData {
   }
   delayTurnCurrentCreature() {
     [this.initiativeList[0], this.initiativeList[1]] = [this.initiativeList[1], this.initiativeList[0]];
+  }
+  editCreatureInitiative(creatureId, newInitiative) {
+    for (let i = 0; i < this.initiativeList.length; i++) {
+      if (this.initiativeList[i].creatureId === creatureId) {
+        this.initiativeList[i].initiative = newInitiative;
+        return;
+      }
+    }
+    for (let i = 0; i < this.deadList.length; i++) {
+      if (this.deadList[i].creatureId === creatureId) {
+        this.deadList[i].initiative = newInitiative;
+        return;
+      }
+    }
+  }
+  moveCreatureUpOnePosition(creatureId) {
+    for (let i = 1; i < this.initiativeList.length; i++) {
+      if (this.initiativeList[i].creatureId === creatureId) {
+        [this.initiativeList[i-1], this.initiativeList[i]] = [this.initiativeList[i], this.initiativeList[i-1]];
+        return;
+      }
+    }
+    alert("ERROR 6: Creature expected, but not found in list; something is wrong...");
+  }
+  moveCreatureDownOnePosition(creatureId) {
+    for (let i = 0; i < this.initiativeList.length - 1; i++) {
+      if (this.initiativeList[i].creatureId === creatureId) {
+        [this.initiativeList[i], this.initiativeList[i+1]] = [this.initiativeList[i+1], this.initiativeList[i]];
+        return;
+      }
+    }
+    alert("ERROR 7: Creature expected, but not found in list; something is wrong...");
   }
   damageCreature(creatureId, damageDealt) {
     for (let i = 0; i < this.initiativeList.length; i++) {
@@ -71,6 +103,29 @@ export class SessionData {
       }
     }
   }
+  addEffectToCreature(creatureId, effectName, effectIcon) {
+    for (let i = 0; i < this.initiativeList.length; i++) {
+      if (this.initiativeList[i].creatureId === creatureId) {
+        let effect = {};
+        effect.name = effectName;
+        effect.icon = effectIcon;
+        this.initiativeList[i].effects.push(effect);
+        break;
+      }
+    }
+  }
+  removeEffectFromCreature(creatureId, effectName) {
+    for (let i = 0; i < this.initiativeList.length; i++) {
+      if (this.initiativeList[i].creatureId === creatureId) {
+        for (let j = 0; j < this.initiativeList[i].effects.length; j++) {
+          if (this.initiativeList[i].effects[j].name === effectName) {
+            this.initiativeList[i].effects.splice(j, 1);
+            return;
+          }
+        }
+      }
+    }
+  }
   containsCreature(creatureId) {
     for (let i = 0; i < this.initiativeList.length; i++) {
       if (this.initiativeList[i].creatureId === creatureId) {
@@ -83,6 +138,33 @@ export class SessionData {
       }
     }
     return false;
+  }
+  isCreatureFirst(creatureId) {
+    return this.initiativeList[0].creatureId === creatureId;
+  }
+  isCreatureLast(creatureId) {
+    return this.initiativeList[this.initiativeList.length-1].creatureId === creatureId;
+  }
+  isCreatureAlive(creatureId) {
+    for (let i = 0; i < this.initiativeList.length; i++) {
+      if (this.initiativeList[i].creatureId === creatureId) {
+        return true;
+      }
+    }
+    return false;
+  }
+  getCreatureDataEntry(creatureId) {
+    for (let i = 0; i < this.initiativeList.length; i++) {
+      if (this.initiativeList[i].creatureId === creatureId) {
+        return this.initiativeList[i];
+      }
+    }
+    for (let i = 0; i < this.deadList.length; i++) {
+      if (this.deadList[i].creatureId === creatureId) {
+        return this.deadList[i].creatureId;
+      }
+    }
+    alert("ERROR 5: Requested Creature does not exist; something is wrong...");
   }
   sortInitiativeList() {
     this.initiativeList.sort(function (a, b) {
@@ -142,6 +224,7 @@ export class SessionData {
 
     // Heal
     for (let i = 0; i < this.initiativeList.length; i++) {
+      this.initiativeList[i].effects = [];
       if (!(this.initiativeList[i].hitpointsCurrent == null)) {
         this.initiativeList[i].hitpointsCurrent = this.initiativeList[i].hitpointsMax;
       }
@@ -153,10 +236,11 @@ export class SessionData {
 }
 
 class DataEntry {
-  constructor(creatureId, initiative, hitpointsCurrent=null, hitpointsMax=null) {
+  constructor(creatureId, initiative, hitpointsCurrent=null, hitpointsMax=null, effects=[]) {
     this.creatureId = creatureId;
     this.initiative = initiative;
     this.hitpointsCurrent = hitpointsCurrent;
     this.hitpointsMax = hitpointsMax;
+    this.effects = effects;
   }
 }

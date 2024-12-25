@@ -4,7 +4,8 @@ import { EventListener, EventListenerList } from "./EventListeners.js";
 export const ModalType = {
   Confirm: 0,
   NumberInput: 1,
-  TextInput: 2
+  TextInput: 2,
+  MultipleChoiceInput: 3
 }
 
 export class Modal {
@@ -84,6 +85,25 @@ export class Modal {
   }
 
   // ##################################################
+  // Multiple Choice Input Logic
+  // ##################################################
+  activateMultipleChoiceInput(prompt, labelsList, onSelectFunctionsList) {
+    this.modalType = ModalType.MultipleChoiceInput;
+    this.prompt = prompt;
+    this.labelsList = labelsList;
+    this.eventListeners = new EventListenerList([]);
+    if (labelsList.length !== onSelectFunctionsList.length) {
+      alert("ERROR 4: Invalid list length; something is wrong...")
+    }
+    for (let i = 0; i < labelsList.length; i++) {
+      this.eventListeners.append(new EventListener(`option-${i}`, "click", () => {this.deactivate(); onSelectFunctionsList[i]();}));
+    }
+    this.eventListeners.append(new EventListener(`cancel`, "click", this.deactivate));
+    this.isActive = true;
+    this.ownerUpdateFunction();
+  }
+
+  // ##################################################
   // Other Functions
   // ##################################################
   deactivate = () => {
@@ -126,6 +146,25 @@ export class Modal {
             </div>
           </div>
         `);
+      case ModalType.MultipleChoiceInput:
+        let htmlCode = new HtmlCode(``)
+        htmlCode.append(`
+          <div id="modal" class="modal">
+            <div class="modal-content">
+              <h1 id="modalPrompt">${this.prompt}</h1>
+        `);
+        for (let i = 0; i < this.labelsList.length; i++) {
+          htmlCode.append(`
+            <button id="option-${i}" class="moreActions">${this.labelsList[i]}</button><br>
+          `)
+        }
+        htmlCode.append(`
+              <br>
+              <button id="cancel" class="moreActions">Cancel</button>
+            </div>
+          </div>
+        `)
+        return htmlCode;
       default:
         alert("Invalid ModalType; something is wrong...")
     }

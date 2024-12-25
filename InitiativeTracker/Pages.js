@@ -206,6 +206,7 @@ export class EncounterPage {
     endTurn,
     hitCreature,
     killCreature,
+    viewCreatureActions,
     reviveCreature,
     sessionData
   ) {
@@ -222,6 +223,7 @@ export class EncounterPage {
       const thisCreatureId = sessionData.initiativeList[i].creatureId;
       this.eventListeners.append(new EventListener(`hit-${thisCreatureId}`, "click", () => {hitCreature(thisCreatureId);}));
       this.eventListeners.append(new EventListener(`rip-${thisCreatureId}`, "click", () => {killCreature(thisCreatureId);}));
+      this.eventListeners.append(new EventListener(`more-${thisCreatureId}`, "click", () => {viewCreatureActions(thisCreatureId);}));
       this.eventListeners.append(new EventListener(`revive-${thisCreatureId}`, "click", () => {reviveCreature(thisCreatureId);}));
     }
   }
@@ -238,6 +240,7 @@ export class EncounterPage {
       let thisInitiative = sessionData.initiativeList[0].initiative;
       let thisHitpointsCurrent = sessionData.initiativeList[0].hitpointsCurrent;
       let thisHitpointsMax = sessionData.initiativeList[0].hitpointsMax;
+      let thisCreatureEffects = sessionData.initiativeList[0].effects;
       htmlCode.append(`
         <div class="currentCreature">
           <div class="currentCreatureName">${thisCreature}</div>
@@ -249,6 +252,11 @@ export class EncounterPage {
       }
       else {
         htmlCode.append(`</br>Hitpoints | <img class="icon" src="HitpointsIcon.png"> --/--`);
+      }
+      for (let i = 0; i < thisCreatureEffects.length; i++) {
+        let effectName = thisCreatureEffects[i].name;
+        let effectIcon = thisCreatureEffects[i].icon;
+        htmlCode.append(`</br><img class="icon" src="${effectIcon}"> ${effectName} <img class="icon" src="${effectIcon}">`);
       }
       htmlCode.append(`
           </div>
@@ -263,6 +271,9 @@ export class EncounterPage {
             <button class="delayTurn" id="delayTurn">Delay Turn</button>
             <button class="endTurn" id="endTurn">End Turn</button>
           </div>
+          <div class="buttonHolder">
+            <button class="moreActions" id="more-${thisCreature}">More</button>
+          </div>
         </div>
       `);
     }
@@ -271,20 +282,37 @@ export class EncounterPage {
       let thisInitiative = sessionData.initiativeList[i].initiative;
       let thisHitpointsCurrent = sessionData.initiativeList[i].hitpointsCurrent;
       let thisHitpointsMax = sessionData.initiativeList[i].hitpointsMax;
+      let thisCreatureEffects = sessionData.initiativeList[i].effects;
       htmlCode.append(`<div class="otherCreatures">`);
       if (!(thisHitpointsCurrent == null)) {
         htmlCode.append(`
           ${thisCreature} | <img class="icon" src="InitiativeIcon.png"> ${thisInitiative} | <img class="icon" src="HitpointsIcon.png"> ${thisHitpointsCurrent}/${thisHitpointsMax}
-          <div class="buttonHolder">
+        `);
+        for (let i = 0; i < thisCreatureEffects.length; i++) {
+          let effectName = thisCreatureEffects[i].name;
+          let effectIcon = thisCreatureEffects[i].icon;
+          htmlCode.append(`</br><img class="icon" src="${effectIcon}"> ${effectName} <img class="icon" src="${effectIcon}">`);
+        }
+        htmlCode.append(`
+            <div class="buttonHolder">
             <button class="hit" id="hit-${thisCreature}">Hit</button>
+            <button class="hit" id="more-${thisCreature}">More</button>
           </div>
         `);
       }
       else {
         htmlCode.append(`
           ${thisCreature} | <img class="icon" src="InitiativeIcon.png"> ${thisInitiative} | <img class="icon" src="HitpointsIcon.png"> --/--
+        `);
+        for (let i = 0; i < thisCreatureEffects.length; i++) {
+          let effectName = thisCreatureEffects[i].name;
+          let effectIcon = thisCreatureEffects[i].icon;
+          htmlCode.append(`<br><img class="icon" src="${effectIcon}"> ${effectName} <img class="icon" src="${effectIcon}">`);
+        }
+        htmlCode.append(`
           <div class="buttonHolder">
             <button class="hit" id="rip-${thisCreature}">R.I.P.</button>
+            <button class="hit" id="more-${thisCreature}">More</button>
           </div>
         `);
       }
@@ -297,6 +325,7 @@ export class EncounterPage {
           <del>${thisCreature}</del>
           <div class="buttonHolder">
             <button class="revive" id="revive-${thisCreature}">Revive</button>
+            <button class="hit" id="more-${thisCreature}">More</button>
           </div>
         </div>
       `)
