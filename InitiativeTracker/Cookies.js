@@ -69,7 +69,8 @@ export class CookieHandler {
         creatureId: sessionData.initiativeList[i].creatureId,
         initiative: sessionData.initiativeList[i].initiative,
         hitpointsCurrent: sessionData.initiativeList[i].hitpointsCurrent,
-        hitpointsMax: sessionData.initiativeList[i].hitpointsMax
+        hitpointsMax: sessionData.initiativeList[i].hitpointsMax,
+        effects: sessionData.initiativeList[i].effects
       })
     }
     dict.deadList = [];
@@ -78,7 +79,8 @@ export class CookieHandler {
         creatureId: sessionData.deadList[i].creatureId,
         initiative: sessionData.deadList[i].initiative,
         hitpointsCurrent: sessionData.deadList[i].hitpointsCurrent,
-        hitpointsMax: sessionData.deadList[i].hitpointsMax
+        hitpointsMax: sessionData.deadList[i].hitpointsMax,
+        effects: sessionData.deadList[i].effects
       })
     }
     dict.encounterName = sessionData.encounterName;
@@ -96,7 +98,8 @@ export class CookieHandler {
         dict.initiativeList[i].creatureId,
         dict.initiativeList[i].initiative,
         dict.initiativeList[i].hitpointsCurrent,
-        dict.initiativeList[i].hitpointsMax
+        dict.initiativeList[i].hitpointsMax,
+        dict.initiativeList[i].effects
       )
     }
     for (let i = 0; i < dict.deadList.length; i++) {
@@ -104,7 +107,8 @@ export class CookieHandler {
         dict.deadList[i].creatureId,
         dict.deadList[i].initiative,
         dict.deadList[i].hitpointsCurrent,
-        dict.deadList[i].hitpointsMax
+        dict.deadList[i].hitpointsMax,
+        dict.deadList[i].effects
       )
     }
     if (dict.encounterName !== undefined) {

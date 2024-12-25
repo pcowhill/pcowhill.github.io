@@ -205,6 +205,9 @@ export class EncounterPage {
     delayTurn,
     endTurn,
     hitCreature,
+    killCreature,
+    viewCreatureActions,
+    reviveCreature,
     sessionData
   ) {
     this.pageType = PageType.Encounter;
@@ -219,6 +222,9 @@ export class EncounterPage {
     for (let i = 0; i < sessionData.initiativeList.length; i++) {
       const thisCreatureId = sessionData.initiativeList[i].creatureId;
       this.eventListeners.append(new EventListener(`hit-${thisCreatureId}`, "click", () => {hitCreature(thisCreatureId);}));
+      this.eventListeners.append(new EventListener(`rip-${thisCreatureId}`, "click", () => {killCreature(thisCreatureId);}));
+      this.eventListeners.append(new EventListener(`more-${thisCreatureId}`, "click", () => {viewCreatureActions(thisCreatureId);}));
+      this.eventListeners.append(new EventListener(`revive-${thisCreatureId}`, "click", () => {reviveCreature(thisCreatureId);}));
     }
   }
   getHtml(sessionData) {
@@ -234,6 +240,7 @@ export class EncounterPage {
       let thisInitiative = sessionData.initiativeList[0].initiative;
       let thisHitpointsCurrent = sessionData.initiativeList[0].hitpointsCurrent;
       let thisHitpointsMax = sessionData.initiativeList[0].hitpointsMax;
+      let thisCreatureEffects = sessionData.initiativeList[0].effects;
       htmlCode.append(`
         <div class="currentCreature">
           <div class="currentCreatureName">${thisCreature}</div>
@@ -245,6 +252,11 @@ export class EncounterPage {
       }
       else {
         htmlCode.append(`</br>Hitpoints | <img class="icon" src="HitpointsIcon.png"> --/--`);
+      }
+      for (let i = 0; i < thisCreatureEffects.length; i++) {
+        let effectName = thisCreatureEffects[i].name;
+        let effectIcon = thisCreatureEffects[i].icon;
+        htmlCode.append(`</br><img class="icon" src="${effectIcon}"> ${effectName} <img class="icon" src="${effectIcon}">`);
       }
       htmlCode.append(`
           </div>
@@ -259,6 +271,9 @@ export class EncounterPage {
             <button class="delayTurn" id="delayTurn">Delay Turn</button>
             <button class="endTurn" id="endTurn">End Turn</button>
           </div>
+          <div class="buttonHolder">
+            <button class="moreActions" id="more-${thisCreature}">More</button>
+          </div>
         </div>
       `);
     }
@@ -267,26 +282,53 @@ export class EncounterPage {
       let thisInitiative = sessionData.initiativeList[i].initiative;
       let thisHitpointsCurrent = sessionData.initiativeList[i].hitpointsCurrent;
       let thisHitpointsMax = sessionData.initiativeList[i].hitpointsMax;
+      let thisCreatureEffects = sessionData.initiativeList[i].effects;
       htmlCode.append(`<div class="otherCreatures">`);
       if (!(thisHitpointsCurrent == null)) {
         htmlCode.append(`
-            ${thisCreature} | <img class="icon" src="InitiativeIcon.png"> ${thisInitiative} | <img class="icon" src="HitpointsIcon.png"> ${thisHitpointsCurrent}/${thisHitpointsMax}
+          ${thisCreature} | <img class="icon" src="InitiativeIcon.png"> ${thisInitiative} | <img class="icon" src="HitpointsIcon.png"> ${thisHitpointsCurrent}/${thisHitpointsMax}
+        `);
+        for (let i = 0; i < thisCreatureEffects.length; i++) {
+          let effectName = thisCreatureEffects[i].name;
+          let effectIcon = thisCreatureEffects[i].icon;
+          htmlCode.append(`</br><img class="icon" src="${effectIcon}"> ${effectName} <img class="icon" src="${effectIcon}">`);
+        }
+        htmlCode.append(`
             <div class="buttonHolder">
-              <button class="hit" id="hit-${thisCreature}">Hit</button>
-            </div>
+            <button class="hit" id="hit-${thisCreature}">Hit</button>
+            <button class="hit" id="more-${thisCreature}">More</button>
+          </div>
         `);
       }
       else {
         htmlCode.append(`
-            ${thisCreature} | <img class="icon" src="InitiativeIcon.png"> ${thisInitiative} | <img class="icon" src="HitpointsIcon.png"> --/--
+          ${thisCreature} | <img class="icon" src="InitiativeIcon.png"> ${thisInitiative} | <img class="icon" src="HitpointsIcon.png"> --/--
+        `);
+        for (let i = 0; i < thisCreatureEffects.length; i++) {
+          let effectName = thisCreatureEffects[i].name;
+          let effectIcon = thisCreatureEffects[i].icon;
+          htmlCode.append(`<br><img class="icon" src="${effectIcon}"> ${effectName} <img class="icon" src="${effectIcon}">`);
+        }
+        htmlCode.append(`
+          <div class="buttonHolder">
+            <button class="hit" id="rip-${thisCreature}">R.I.P.</button>
+            <button class="hit" id="more-${thisCreature}">More</button>
+          </div>
         `);
       }
       htmlCode.append(`</div>`)
     }
     for (let i = 0; i < sessionData.deadList.length; i++) {
       let thisCreature = sessionData.deadList[i].creatureId;
-      let thisInitiative = sessionData.deadList[i].initiative;
-      htmlCode.append(`<div class="otherCreatures"><del>${thisCreature}</del></div>`)
+      htmlCode.append(`
+        <div class="otherCreatures">
+          <del>${thisCreature}</del>
+          <div class="buttonHolder">
+            <button class="revive" id="revive-${thisCreature}">Revive</button>
+            <button class="hit" id="more-${thisCreature}">More</button>
+          </div>
+        </div>
+      `)
     }
 
     // End Encounter Button
