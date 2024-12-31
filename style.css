@@ -1,0 +1,106 @@
+div.hero {
+    background-image: url("Hero-Background.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-color: rgb(227, 227, 227);
+    background-position-x: center;
+    background-position-y: top;
+
+    display: flex;
+    position: relative;
+    align-items: center;
+    height: 60vw;
+    overflow: hidden;
+}
+div.hero-name {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0px;
+    width: 48vw;
+
+    color: #262626;
+    font-size: 8.5vw; /* Adjusts the size of the text */
+    font-family:Georgia, 'Times New Roman', Times, serif;
+    text-align: left; /* Centers the title horizontally */
+    margin: 0px 0px; /* Adds some vertical margin */
+}
+div.hero-first-name {
+    display: inline;
+    color: #595959;
+}
+div.hero-last-name {
+    font-weight: bold;
+    display: inline;
+    color: #262626;
+}
+div.hero-text {
+    position: absolute;
+    bottom: 0;
+    right: auto;
+    padding: 0px;
+    width: 100vw;
+    background-color: rgba(159, 159, 159, 0.8);
+
+    color: #262626;
+    font-size: 6vw; /* Adjusts the size of the text */
+    font-family: Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: bold;
+    text-align: center; /* Centers the title horizontally */
+    margin: 20px 0; /* Adds some vertical margin */
+}
+
+
+body {
+    margin: 0;
+}
+div.main {
+    margin: 8;
+}
+
+div.text {
+    text-align: center;
+    color: #262626;
+    font-family: Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 20px;
+}
+h2 {
+    text-align: center;
+    font-family: Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+
+@media (max-height: 80vw) {
+    div.hero {
+        height: 75vh;
+    }
+    div.spacer {
+        height: 0.75vh;
+        background-color: black;
+    }
+    div.text {
+        font-size: 20px;
+    }
+    div.main {
+        width: 125vh;
+        margin: auto;
+    }
+}
+@media (min-height: 80vw) {
+    div.hero {
+        height: 60vw;
+    }
+    div.spacer {
+        height: 0.6vw;
+        background-color: black;
+    }
+    div.text {
+        font-size: 20px;
+    }
+    div.main {
+        width: auto;
+        margin: 8;
+    }
+}
