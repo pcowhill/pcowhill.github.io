@@ -50,19 +50,12 @@ div.hero-text {
     margin: 20px 0; /* Adds some vertical margin */
 }
 
-
-body {
-    margin: 0;
-}
-div.main {
-    margin: 8;
-}
-
 div.text {
     text-align: center;
     color: #262626;
     font-family: Calibri, 'Trebuchet MS', sans-serif;
     font-size: 20px;
+    margin: 10px;
 }
 h2 {
     text-align: center;
@@ -70,14 +63,41 @@ h2 {
     font-size: 40px;
     font-weight: bold;
 }
+h3 {
+    text-align: center;
+    font-family: Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+body {
+    margin: 0;
+}
+div.main {
+    margin: auto;
+    padding: 1vh;
+    place-items: center;
+    justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+}
 
 div.widget {
-    background-color: lightgray;
+    background-color: rgb(170, 238, 172);
+    margin: 5px;
     display: inline-flex;
     border-radius: 20px;
     overflow: hidden;
     flex-wrap: wrap;
     border: 2px solid black;
+    transition: transform 0.3s;
+}
+div.widget:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(5px 5px 10px rgba(0, 0, 0, 0.5));
+    cursor: pointer;
 }
 div.widget-picture {
     width: 300px;
@@ -97,9 +117,15 @@ img.responsive-image {
     object-position: center;
     display: block;
 }
-@media (max-width: 630px) {
+@media (max-width: 650px) {
     div.widget {
         max-width: 300px;
+    }
+}
+
+@media (min-width: 1860px) {
+    div.main {
+        width: 1860px;
     }
 }
 
@@ -114,10 +140,6 @@ img.responsive-image {
     div.text {
         font-size: 20px;
     }
-    div.main {
-        width: 125vh;
-        margin: auto;
-    }
 }
 @media (min-height: 80vw) {
     div.hero {
@@ -129,9 +151,5 @@ img.responsive-image {
     }
     div.text {
         font-size: 20px;
-    }
-    div.main {
-        width: auto;
-        margin: 8;
     }
 }
