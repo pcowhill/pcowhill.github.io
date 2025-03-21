@@ -122,7 +122,7 @@ The user interface will be designed in the course of development.  It is not the
 ### Introductory Notes / Lessons Learned:
 - Note that the type of action that occurs when a die strikes the side of the box is called a "deflection", not a "collision".  This has caused much confusion.  Elastic collisions involve conservation of momentum and energy while deflections (i.e. collisions off infinitely massive objects, such as the wall of the box) only conserve energy as the wall "sucks up" momentum while not changing its velocity.  Everywhere else in this document where the word "collision" is used, I am talking about a deflection.
 
-### Math for Elastic Deflection
+### Setting up the Preconditions/Constraints
 Imagine that a regular-polygonal object is traveling toward a wall (or more specifically, one vertex of the polygon in particular is about to strike a wall).  The object has mass (which gives it linear momentum and energy) and also a moment of inertia (which gives it angular momentum and energy).  The center of mass of the object has linear velocity, and since the object may or may not be spinning about its center of mass, it also has angular velocity.  Since there are no forces acting upon the object as it approaches the wall, these velocities are constant until it strikes the wall.
 
 Once the object strikes the wall, its linear velocity and angular velocity will change.  The wall will push against the object in the direction perpendicular to the wall's surface.  Note that this is a frictionless wall, so no portion of the force applied will be in the direction parallel to the wall.  Since this is an elastic collision, it's energy will be conserved.  If it was an inelastic collision, a fixed proportion (e.g. 90%) of the energy would be conserved, and the remainder would be lost.
@@ -162,12 +162,14 @@ Together, the energy conservation and coupled force equations produce a system o
 $$\frac{v_i^2m}{2} + \frac{\omega_i^2I}{2}  =  \frac{v_f^2m}{2} + \frac{\omega_f^2I}{2}$$
 $$m(v_f-v_i)\cos{\phi} = I(\omega_f-\omega_i)$$
 
+### Solving the System of Equations
+
 First, solve for $v_f$ in the force equation:
 $$m(v_f-v_i)\cos{\phi} = I(\omega_f-\omega_i)$$
 $$v_f-v_i = \frac{I(\omega_f-\omega_i)}{m\cos{\phi}}$$
 $$v_f = v_i + \frac{I(\omega_f-\omega_i)}{m\cos{\phi}}$$
 
-The, plug that into the first equation:
+Then, plug that into the first equation:
 $$\frac{v_i^2m}{2} + \frac{\omega_i^2I}{2} = \frac{v_f^2m}{2} + \frac{\omega_f^2I}{2}$$
 $$\frac{v_i^2m}{2} + \frac{\omega_i^2I}{2} = \frac{(v_i + \frac{I(\omega_f-\omega_i)}{m\cos{\phi}})^2m}{2} + \frac{\omega_f^2I}{2}$$
 $$v_i^2m + \omega_i^2I = (v_i + \frac{I(\omega_f-\omega_i)}{m\cos{\phi}})^2m + \omega_f^2I$$
@@ -272,6 +274,8 @@ Therefore, the two solved equations for the new velocities, $v_f$ and $\omega_f$
 $$v_f = v_i - 2\frac{v_i + \omega_i\cos{\phi}}{1 + \frac{m\cos^2{\phi}}{I}}$$
 $$\omega_f = \omega_i - 2\frac{\omega_i\cos^2{\phi}+v_i\cos{\phi}}{\frac{I}{m} + \cos^2{\phi}}$$
 
+### Sanity Checks
+
 Some sanity checks for these equations:
 - If $\phi=\pi/2$ (i.e., the surface of the wall is perfectly parallel to the line between the center of mass of the object and the striking vertex), then $v_f=-v_i$ and $\omega_f=\omega_i$.  This correlates with the object bouncing straight back at the same velocity and the rotational velocity remaining the same which is what one would expect.
 - If $\phi=\pi/2 + \epsilon$ for some small positive $0<\epsilon<<1$ (i.e., the object is slightly off-alignment from the previous example), then $v_f \approx -v_i$ and $\omega_f \approx \omega_i$.  More importantly, however, $\cos{\phi} < 0$, which means:
@@ -283,3 +287,124 @@ Some sanity checks for these equations:
   - $v$ is positive when traveling toward the wall and negative when traveling away from the wall.
   - $\omega$ is positive when the object is rotating counter-clockwise (right-hand rule).
   - $\phi$ (for $-\pi<\phi<\pi$) is positive when going from the wall to the line between the center of mass of the object and the striking vertex counter-clockwise (right-hand rule).
+
+
+
+
+## Modeling Inelastic Deflection
+
+### Introduction
+This section builds off of the previous section on Modeling Elastic Deflection.  That section should be read prior to this section.
+
+### Setting up Preconditions and Constraints
+The only difference for the inelastic deflection is that the kinetic engery in the object after the deflection is not the same as the kinetic energy in the object before the deflection.  When deflection occurs in reality, often some energy is lost thermally or as sound.  All of the energy converted to other forms can be represented as $Q$.  Therefore, the conservation of energy equation now becomes.
+$$E_i = E_f + Q$$
+
+How large is $Q$?  While there a few ways to model this, a simple approach that can be taken is that the dissepated energy is proportional to the initial kinetic energy:
+$$Q = \alpha E_i$$
+
+And so:
+$$E_i = E_f + \alpha E_i$$
+$$E_i - \alpha E_i = E_f$$
+$$E_i - \alpha E_i = E_f$$
+$$(1-\alpha) E_i = E_f$$
+
+And for $\beta = 1-\alpha$:
+$$ \beta E_i=E_f$$
+
+Here, the constant $\beta$ Represents the dampening factor, i.e. the proportion of the original kinetic energy that persists after the deflection.  For a 10% energy dissipation, $\beta=0.9$.
+
+Now, the system of equations to be solved to determine $v_f$ and $\omega_f$ are:
+$$\frac{\beta v_i^2m}{2} + \frac{\beta \omega_i^2I}{2}  =  \frac{v_f^2m}{2} + \frac{\omega_f^2I}{2}$$
+$$m(v_f-v_i)\cos{\phi} = I(\omega_f-\omega_i)$$
+
+Solving for $v_f$ in the force equation remains the same:
+$$v_f = v_i + \frac{I(\omega_f-\omega_i)}{m\cos{\phi}}$$
+
+Plugging this into the energy equation produces:
+$$\frac{\beta v_i^2m}{2} + \frac{\beta \omega_i^2I}{2} = \frac{v_f^2m}{2} + \frac{\omega_f^2I}{2}$$
+$$\frac{\beta v_i^2m}{2} + \frac{\beta \omega_i^2I}{2} = \frac{(v_i + \frac{I(\omega_f-\omega_i)}{m\cos{\phi}})^2m}{2} + \frac{\omega_f^2I}{2}$$
+$$\beta v_i^2m + \beta \omega_i^2I = (v_i + \frac{I(\omega_f-\omega_i)}{m\cos{\phi}})^2m + \omega_f^2I$$
+$$\beta v_i^2m + \beta \omega_i^2I = mv_i^2 + m2v_i\frac{I(\omega_f-\omega_i)}{m\cos{\phi}} + m(\frac{I(\omega_f-\omega_i)}{m\cos{\phi}})^2 + \omega_f^2I$$
+$$(\beta-1) v_i^2m + \beta \omega_i^2I = m2v_i\frac{I(\omega_f-\omega_i)}{m\cos{\phi}} + m(\frac{I(\omega_f-\omega_i)}{m\cos{\phi}})^2 + \omega_f^2I$$
+$$(\beta-1) v_i^2m + \beta \omega_i^2I = 2v_i\frac{I(\omega_f-\omega_i)}{\cos{\phi}} + m\frac{I^2(\omega_f-\omega_i)^2}{m^2\cos^2{\phi}} + \omega_f^2I$$
+$$(\beta-1) v_i^2m + \beta \omega_i^2I = 2v_i\frac{I(\omega_f-\omega_i)}{\cos{\phi}} + m\frac{I^2(\omega_f^2-2\omega_f\omega_i+\omega_i^2)}{m^2\cos^2{\phi}} + \omega_f^2I$$
+$$(\beta-1) v_i^2m + \beta \omega_i^2I = \frac{2v_iI}{\cos{\phi}}\omega_f - \frac{2v_iI\omega_i}{\cos{\phi}} + m\frac{I^2(\omega_f^2-2\omega_f\omega_i+\omega_i^2)}{m^2\cos^2{\phi}} + \omega_f^2I$$
+$$(\beta-1) v_i^2m + \beta \omega_i^2I = \frac{2v_iI}{\cos{\phi}}\omega_f - \frac{2v_iI\omega_i}{\cos{\phi}} + \frac{I^2(\omega_f^2-2\omega_f\omega_i+\omega_i^2)}{m\cos^2{\phi}} + \omega_f^2I$$
+$$(\beta-1) v_i^2m + \beta \omega_i^2I = \frac{2v_iI}{\cos{\phi}}\omega_f - \frac{2v_iI\omega_i}{\cos{\phi}} + \frac{I^2}{m\cos^2{\phi}}\omega_f^2 - \frac{2I^2\omega_i}{m\cos^2{\phi}}\omega_f + \frac{I^2\omega_i^2}{m\cos^2{\phi}} + I\omega_f^2$$
+$$0 = 
+(- (\beta-1) v_i^2m - \beta \omega_i^2I - \frac{2v_iI\omega_i}{\cos{\phi}} + \frac{I^2\omega_i^2}{m\cos^2{\phi}})
++ (\frac{2v_iI}{\cos{\phi}} - \frac{2I^2\omega_i}{m\cos^2{\phi}})\omega_f
++ (\frac{I^2}{m\cos^2{\phi}} + I)\omega_f^2$$
+
+Now, the quadratic formula can be used again to solve for $\omega_f$:
+$$\omega_f = \frac{-b \pm \sqrt{b^2-4ac}}{2a}$$
+$$a = \frac{I^2}{m\cos^2{\phi}} + I$$
+$$b = \frac{2v_iI}{\cos{\phi}} - \frac{2I^2\omega_i}{m\cos^2{\phi}}$$
+$$c = (1-\beta) v_i^2m - \beta \omega_i^2I - \frac{2v_iI\omega_i}{\cos{\phi}} + \frac{I^2\omega_i^2}{m\cos^2{\phi}}$$
+
+$b^2$ remains unchanged:
+$$b^2 = \frac{4v_i^2I^2}{\cos^2{\phi}} - \frac{8v_iI^3\omega_i}{m\cos^3{\phi}} + \frac{4I^4\omega_i^2}{m^2\cos^4{\phi}}$$
+
+$-4ac$ becomes:
+
+$$-4ac = -4 (\frac{I^2}{m\cos^2{\phi}} + I)((1-\beta) v_i^2m - \beta \omega_i^2I - \frac{2v_iI\omega_i}{\cos{\phi}} + \frac{I^2\omega_i^2}{m\cos^2{\phi}})$$
+
+$$-4ac = -4 (\frac{I^2}{m\cos^2{\phi}})((1-\beta) v_i^2m - \beta \omega_i^2I - \frac{2v_iI\omega_i}{\cos{\phi}} + \frac{I^2\omega_i^2}{m\cos^2{\phi}}) - 4I((1-\beta) v_i^2m - \beta \omega_i^2I - \frac{2v_iI\omega_i}{\cos{\phi}} + \frac{I^2\omega_i^2}{m\cos^2{\phi}})$$
+
+$$-4ac = -4 (\frac{I^2}{m\cos^2{\phi}})((1-\beta) v_i^2m - \beta \omega_i^2I - \frac{2v_iI\omega_i}{\cos{\phi}} + \frac{I^2\omega_i^2}{m\cos^2{\phi}}) - 4 (1-\beta) v_i^2mI+ 4\beta\omega_i^2I^2 + \frac{8v_iI^2\omega_i}{\cos{\phi}} - \frac{4I^3\omega_i^2}{m\cos^2{\phi}}$$
+
+$$-4ac = \frac{-4(1-\beta)v_i^2I^2}{\cos^2{\phi}}  + \frac{4\beta I^3\omega_i^2}{m\cos^2{\phi}} + \frac{8v_iI^3\omega_i}{m\cos^3{\phi}} - \frac{4I^4\omega_i^2}{m^2\cos^4{\phi}} - 4 (1-\beta) v_i^2mI+ 4\beta\omega_i^2I^2 + \frac{8v_iI^2\omega_i}{\cos{\phi}} - \frac{4I^3\omega_i^2}{m\cos^2{\phi}}$$
+
+$$-4ac = \frac{4(\beta-1)v_i^2I^2}{\cos^2{\phi}}  + \frac{4\beta I^3\omega_i^2}{m\cos^2{\phi}} + \frac{8v_iI^3\omega_i}{m\cos^3{\phi}} - \frac{4I^4\omega_i^2}{m^2\cos^4{\phi}} + 4 (\beta-1) v_i^2mI+ 4\beta\omega_i^2I^2 + \frac{8v_iI^2\omega_i}{\cos{\phi}} - \frac{4I^3\omega_i^2}{m\cos^2{\phi}}$$
+
+$$-4ac = \frac{4(\beta-1)v_i^2I^2}{\cos^2{\phi}}  + \frac{4(\beta-1) I^3\omega_i^2}{m\cos^2{\phi}} + \frac{8v_iI^3\omega_i}{m\cos^3{\phi}} - \frac{4I^4\omega_i^2}{m^2\cos^4{\phi}} + 4 (\beta-1) v_i^2mI+ 4\beta\omega_i^2I^2 + \frac{8v_iI^2\omega_i}{\cos{\phi}}$$
+
+... so, $b^2-4ac$ is:
+
+$$b^2 - 4ac = \frac{4v_i^2I^2}{\cos^2{\phi}} - \frac{8v_iI^3\omega_i}{m\cos^3{\phi}} + \frac{4I^4\omega_i^2}{m^2\cos^4{\phi}} + \frac{4(\beta-1)v_i^2I^2}{\cos^2{\phi}} + \frac{4(\beta-1) I^3\omega_i^2}{m\cos^2{\phi}} + \frac{8v_iI^3\omega_i}{m\cos^3{\phi}} - \frac{4I^4\omega_i^2}{m^2\cos^4{\phi}} + 4 (\beta-1) v_i^2mI + 4\beta\omega_i^2I^2 + \frac{8v_iI^2\omega_i}{\cos{\phi}}$$
+
+$$b^2 - 4ac = \frac{4v_i^2I^2}{\cos^2{\phi}} + \frac{4I^4\omega_i^2}{m^2\cos^4{\phi}} + \frac{4(\beta-1)v_i^2I^2}{\cos^2{\phi}}  + \frac{4(\beta-1) I^3\omega_i^2}{m\cos^2{\phi}} - \frac{4I^4\omega_i^2}{m^2\cos^4{\phi}} + 4 (\beta-1) v_i^2mI + 4\beta\omega_i^2I^2 + \frac{8v_iI^2\omega_i}{\cos{\phi}}$$
+
+$$b^2 - 4ac = \frac{4v_i^2I^2}{\cos^2{\phi}} + \frac{4(\beta-1)v_i^2I^2}{\cos^2{\phi}}  + \frac{4(\beta-1) I^3\omega_i^2}{m\cos^2{\phi}} + 4 (\beta-1) v_i^2mI + 4\beta\omega_i^2I^2 + \frac{8v_iI^2\omega_i}{\cos{\phi}}$$
+
+$$b^2 - 4ac = \frac{4\beta v_i^2I^2}{\cos^2{\phi}} + \frac{4(\beta-1) I^3\omega_i^2}{m\cos^2{\phi}} + 4 (\beta-1) v_i^2mI + 4\beta\omega_i^2I^2 + \frac{8v_iI^2\omega_i}{\cos{\phi}}$$
+
+$$b^2 - 4ac = 4 I^2 (\frac{\beta v_i^2}{\cos^2{\phi}} + \frac{(\beta-1) \frac{I}{m}\omega_i^2}{\cos^2{\phi}} + (\beta-1) v_i^2\frac{m}{I} + \beta\omega_i^2 + \frac{2v_i\omega_i}{\cos{\phi}})$$
+
+$$b^2 - 4ac = 4 I^2 (\beta(\frac{v_i^2}{\cos^2{\phi}} + \frac{\frac{I}{m}\omega_i^2}{\cos^2{\phi}} + v_i^2\frac{m}{I} + \omega_i^2) + (-\frac{\frac{I}{m}\omega_i^2}{\cos^2{\phi}} - v_i^2\frac{m}{I} + \frac{2v_i\omega_i}{\cos{\phi}}))$$
+
+For the sake of time (since I will want to implement other models), I will leave this here.  Algorithmically, $w_f$ can be solved from the quadratic formula and $v_f$ can be solved from $w_v$.  The point of continuing through these formulae is for understanding and optimization; however, it is not strictly necessary.
+
+
+
+
+## Modeling Inelastic Deflection (Force-Scaled)
+One of the problems that I can see with implemneting inelastic collision as described in the previous section is that every deflection (regardless of how "hard" the object struck the surface) would result in the same proportion of energy lost.  However, it seems to make more sense that the amount of energy lost would be proportional to the amount of force applied on the object.  That would mean that when the object simply tapped the surface, it would not lose as much energy as if it slammed into the surface.
+
+One way to model this is to have the reduction in energy be linear to the force applied.  Now, since the force is instantaneous and infinite, we instead can make it proportional to the change in velocity scaled by the mass of the object.  Additionally, we want this to be scaled by the maximum force possible given the energy of the object.  So, $\alpha$, the reduction in the energy would be modeled as such:
+
+$$E_i = E_f + \alpha E_i$$
+$$\alpha = \gamma \frac{F}{F_{max}}$$
+
+Where:
+
+$$F = m (v_f - v_i)$$
+$$F_{max} = m (v_{max} - v_i)$$
+$$E_i = \frac{mv_{max}^2}{2}$$
+
+Note that $v_{max}$ represents the maximum velocity that can be obtained after the collision.  This is equivalent to the linear velocity of the object assuming that all of the energy is present within it, and $\omega_f=0$.  Also $\gamma$ is another scaling parameter that is the maximum proportion of energy to be lost after a collision.  Taking inspiration from the previous section, perhaps $\gamma=0.1$, so that a maximum of 10% of the energy will be lost on any given collision.
+
+Putting this all-together, the new energy equation becomes:
+
+$$E_i = E_f + \alpha E_i$$
+$$E_i - \alpha E_i = E_f$$
+$$(1-\alpha) E_i = E_f$$
+$$(1-\gamma \frac{F}{F_{max}}) E_i = E_f$$
+$$(1-\gamma \frac{m (v_f - v_i)}{m (v_{max} - v_i)}) E_i = E_f$$
+$$(1-\gamma \frac{v_f - v_i}{v_{max} - v_i}) E_i = E_f$$
+$$(1-\gamma \frac{v_f - v_i}{\pm\sqrt{2E_i/m} - v_i}) E_i = E_f$$
+
+Note that the $\pm$ depends on if the velocity is positive traveling towards the wall or away from it.  If we make the same assumption as a previous section where the velocity is positive when traveling toward the wall, then this equation would resolve as:
+
+$$(1-\gamma \frac{v_f - v_i}{-\sqrt{2E_i/m} - v_i}) E_i = E_f$$

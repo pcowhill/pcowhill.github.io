@@ -24,9 +24,9 @@ export function bouncingDie() {
             vel: 0,
             acc: 0
         },
-        radius: 0.5,
+        radius: 2,
         mass: 5,
-        momentOfInertia: 1 / 12 * 5 * (1 * 1) // https://en.wikipedia.org/wiki/List_of_moments_of_inertia
+        momentOfInertia: 1 / 3 * ((5)) * Math.pow((((2))), 2) // ((mass)) (((radius))) https://en.wikipedia.org/wiki/List_of_moments_of_inertia
     };
     function drawDie(theDie, theCanv, theContext) {
         // Draw Background
@@ -69,6 +69,27 @@ export function bouncingDie() {
             theContext.arc(xPos, theCanv.height - yPos, 10, 0, 2 * Math.PI);
             theContext.fill();
         }
+        // Draw Vertex Labels
+        for (let vertex = 0; vertex < 4; vertex++) {
+            let angle = die.polar.pos + vertex * Math.PI / 2;
+            let xPos = posX + radius * Math.cos(angle);
+            let yPos = posY + radius * Math.sin(angle);
+            theContext.fillStyle = "green";
+            theContext.font = "32px serif";
+            theContext.fillText(theDie.cartesian.pos.y.toString(), xPos, theCanv.height - yPos);
+        }
+        // Draw Energy
+        const v = theDie.cartesian.vel.y;
+        const m = theDie.mass;
+        const w = theDie.polar.vel;
+        const I = theDie.momentOfInertia;
+        const g = theDie.cartesian.acc.y;
+        const h = theDie.cartesian.pos.y;
+        const Energy = m * v * v / 2 + I * w * w / 2 - 2 * m * g * h;
+        theContext.fillStyle = "black";
+        theContext.font = "32px serif";
+        theContext.fillText("Energy: " + Energy.toString(), 10, 30);
+        theContext.fillText("MGH: " + (-m * g * h).toString(), 10, 100);
     }
     function moveDie(theDie, timeDelta, theCanv, theContext) {
         // Update velocity using acceleration
@@ -121,6 +142,8 @@ export function bouncingDie() {
                     const cos_phi = Math.cos(phi);
                     const v_f = v_i - 2 * (v_i + w_i * cos_phi) / (1 + m * cos_phi * cos_phi / I);
                     const w_f = w_i - 2 * (w_i * cos_phi * cos_phi + v_i * cos_phi) / (I / m + cos_phi * cos_phi);
+                    const E_i = v_i * v_i * m / 2 + w_i * w_i * I / 2;
+                    const E_f = v_f * v_f * m / 2 + w_f * w_f * I / 2;
                     die.polar.vel = w_f;
                     die.cartesian.vel.y = -v_f;
                 }
