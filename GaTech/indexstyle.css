@@ -31,6 +31,14 @@ h3 {
   text-align: center;
   padding-bottom: 10px;
 }
+@media (max-width: 768px) {
+  h2 {
+    font-size: 2.5rem !important;
+  }
+  h3 {
+    font-size: 2.0rem !important;
+  }
+}
 
 a.navigation {
   font-size: 2rem;
