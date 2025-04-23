@@ -7,7 +7,7 @@ body {
   color: #001f38 !important;
   font-variation-settings:
     "wdth" 100;
-  background-color: #f8f9fa !important;
+  background-color: #003057d6 !important;
 }
 
 h1 {
@@ -43,7 +43,7 @@ h3 {
 a.navigation {
   font-size: 2rem;
   font-weight: bold;
-  text-decoration: none;
+  text-decoration: underline;
   color: #111111;
 }
 a.navigation:hover {
