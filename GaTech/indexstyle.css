@@ -1,0 +1,165 @@
+
+body {
+  font-family: "Open Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: normal;
+  font-style: normal;
+  color: #001f38 !important;
+  font-variation-settings:
+    "wdth" 100;
+  background-color: #295172 !important;
+}
+
+h1 {
+  text-transform: uppercase;
+  text-align: center;
+  padding-bottom: 10px;
+
+}
+h2 {
+  font-size: 4rem !important;
+  font-variant: small-caps;
+  font-weight: bold;
+  letter-spacing: 2px;
+  color: #B3A369 !important;
+  text-align: center;
+  padding-bottom: 10px;
+}
+h3 {
+  font-size: 2.5rem !important;
+  color: #003057 !important;
+  text-align: center;
+  padding-bottom: 10px;
+}
+@media (max-width: 768px) {
+  h2 {
+    font-size: 2.5rem !important;
+  }
+  h3 {
+    font-size: 2.0rem !important;
+  }
+}
+
+a.navigation {
+  font-size: 2rem;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #111111;
+}
+a.navigation:hover {
+  color: #555555;
+}
+a.navigation:active {
+  color: #B3A369;
+}
+
+b {
+  font-weight: bold !important;
+  letter-spacing: 1px;
+}
+
+div.banner {
+  background: linear-gradient(to right, #000000, #003057, #003057, #003057, #003057, #003057, #000000);
+  padding: 3%;
+  color: white;
+  font-weight: 400;
+}
+
+div.banner2 {
+  background: linear-gradient(to right, #B3A369, #e8ddbc, #f4eedf, #f4eedf, #f4eedf, #e8ddbc, #B3A369);
+  padding: 3%;
+}
+
+.stylized-hr {
+  border: none;
+  border-top: 2px solid #003057; /* Adjust thickness and color */
+  width: 90%; /* Line width (optional) */
+  margin: 20px auto; /* Center alignment and spacing */
+  opacity: 0.8; /* Subtle transparency (optional) */
+}
+
+.video-container {
+  position: relative;
+  width: 100%; /* Set the width to 100% */
+  padding-bottom: 56.25%; /* Maintain a 16:9 aspect ratio (adjust if needed) */
+  height: 0;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5) !important;
+}
+
+.video-container iframe {
+  position: absolute;
+  width: 100%; /* Full width of the container */
+  height: 100%; /* Full height of the container (proportional to width) */
+  border: 0;
+}
+
+.pdf-container {
+  position: relative;
+  width: 100%; /* Set the width to 100% */
+  padding-bottom: 80%; /* Maintain a 16:9 aspect ratio (adjust if needed) */
+  height: 0;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5) !important;
+}
+
+.pdf-container iframe {
+  position: absolute;
+  width: 100%; /* Full width of the container */
+  height: 100%; /* Full height of the container (proportional to width) */
+  border: 0;
+}
+
+
+.carousel-container {
+  position: relative;
+  width: 100%; /* Set the width to 100% */
+  padding-bottom: 56.25%; /* Maintain a 16:9 aspect ratio (adjust if needed) */
+  height: 0;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+div.carousel {
+  position: absolute;
+  width: 100%;
+  overflow: hidden;
+}
+div.img-wrap {
+  display: flex;
+  transition: transform 0.5s ease;
+}
+
+div.img-wrap img {
+  width: 100%;
+  height: auto;
+  flex-shrink: 0;
+}
+
+button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  border: none;
+  padding: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 50%;
+}
+
+button:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+button.prev {
+  left: 10px;
+}
+
+button.next {
+  right: 10px;
+}
