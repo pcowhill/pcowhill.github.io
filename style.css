@@ -57,6 +57,15 @@ div.text {
     font-size: 20px;
     margin: 10px;
 }
+h1 {
+    text-align: center;
+    font-family: Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 80px;
+    font-weight: bold;
+    margin: 0px;
+    font-variant: small-caps;
+    letter-spacing: 2px;
+}
 h2 {
     text-align: center;
     font-family: Calibri, 'Trebuchet MS', sans-serif;
@@ -85,7 +94,7 @@ div.main {
 }
 
 div.widget {
-    background-color: rgb(170, 238, 172);
+    background-color: rgb(159, 226, 191);
     margin: 5px;
     display: inline-flex;
     border-radius: 20px;
