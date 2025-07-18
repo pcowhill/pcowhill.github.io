@@ -130,6 +130,14 @@ img.responsive-image {
     div.widget {
         max-width: 300px;
     }
+    h1 {
+        font-size: 60px;
+    }
+}
+@media (max-width: 480px) {
+    h1 {
+        font-size: 40px;
+    }
 }
 
 @media (min-width: 1860px) {
